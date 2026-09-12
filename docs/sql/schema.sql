@@ -8,6 +8,10 @@ CREATE TYPE identity.user_role AS ENUM (
 
 CREATE TABLE identity.users (
     email TEXT PRIMARY KEY,
+    
+    auth_user_id UUID UNIQUE
+    REFERENCES auth.users(id)
+    ON DELETE SET NULL,
 
     name TEXT NOT NULL,
 
@@ -69,6 +73,6 @@ CREATE TABLE system.settings (
 
     value TEXT NOT NULL,
 
-    updated_by UUID TEXT NOT NULL
+    updated_by TEXT NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
