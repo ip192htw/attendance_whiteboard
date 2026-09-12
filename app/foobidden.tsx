@@ -13,7 +13,7 @@ export default function ForbiddenPage() {
 
       {/* Center Hero Card Container */}
       <div className="relative w-full max-w-2xl bg-surface-container-lowest rounded-xl shadow-md p-space-xl sm:p-12 overflow-hidden border border-outline-variant">
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-surface-container-high via-primary-container to-surface-container-high" />
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-surface-container-high via-primary-container to-surface-container-high" />
 
         <div className="flex flex-col items-center text-center max-w-xl mx-auto">
           <div className="font-display text-7xl sm:text-8xl font-bold text-primary-container tracking-tight mb-space-xs select-none">
