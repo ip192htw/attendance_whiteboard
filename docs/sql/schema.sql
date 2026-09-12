@@ -17,7 +17,7 @@ CREATE TABLE identity.users (
 
     role identity.user_role NOT NULL,
 
-    class INTEGER UNIQUE,
+    class TEXT,
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -33,7 +33,7 @@ CREATE SCHEMA IF NOT EXISTS attendance;
 CREATE TABLE attendance.reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-    class INTEGER NOT NULL,
+    class TEXT NOT NULL,
 
     report_date DATE NOT NULL,
 
