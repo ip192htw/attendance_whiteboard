@@ -2,14 +2,16 @@
 
  // Import the Google sign-in function
 
+ import { signInWithGoogle } from "../../actions/auth";
+
 export function SignInWithGoogleButton() {
     const handleGoogleLogin = async () => {
-        // try {
-        //     await signInWithGoogle("/auth/callback"); // Call the sign-in function with the callback URL
-        // } catch (error) {
-        //     console.error('Google login failed:', error)  
-        //     alert('登入失敗，請稍後再試')
-        // }
+        try {
+            await signInWithGoogle(); // Call the sign-in function
+        } catch (error) {
+            console.error('Google login failed:', error)  
+            alert('登入失敗，請稍後再試')
+        }
     }
 
 

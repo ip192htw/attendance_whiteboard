@@ -1,8 +1,8 @@
 import { SignInWithGoogleButton } from "./components";
 
 export const metadata = {
-    title: "登入 - 學務處出缺勤線上回報",
-    description: "登入後台以管理商品和訂單。",
+    title: "登入 - 學務處學生缺曠回報",
+    description: "登入學生缺曠記錄",
     
 };
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
             {/* Header Block */}s
             <div className="text-center mb-8">
                 <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
-                  學務處出缺勤線上回報
+                  學務處學生缺曠回報
                 </h1>
                 <p className="text-on-surface-variant font-body-md">
                   本系統為校內行政與班級出缺勤回報專用平台。請使用學校公務信箱登入

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+import { exchangeCodeForSession } from '@/app/actions/session';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -13,8 +14,7 @@ export async function GET(request: Request) {
   }
 
 
-  console.log("OAuth Code:", code);
-//   await completeOAuthCallback(code ?? '')
+  await exchangeCodeForSession(code);
 
   return NextResponse.redirect(new URL(redirect_to, origin));
 

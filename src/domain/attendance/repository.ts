@@ -8,4 +8,8 @@ export interface ReportRepository {
 
     find(query: ReportQuery): Promise<ReportList>;
 
+    summit(report: Report): Promise<void>;
+
+    correct(report: Report): Promise<void>;
+
 }

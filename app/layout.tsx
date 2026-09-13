@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { plusJakartaSans, inter, notoSansTC } from "@/lib/font";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,14 +13,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-Hant" className="h-full antialiased">
+    <html
+      lang="zh-Hant"
+      className={`${plusJakartaSans.variable} ${inter.variable} ${notoSansTC.variable} h-full antialiased`}
+    >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+      
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
           rel="stylesheet"

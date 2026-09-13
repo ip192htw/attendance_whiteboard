@@ -21,11 +21,11 @@ export type Role =
     | 'supervisor'
 
 export interface ProfileQuery {
-    email?: string;
+    email?: string[];
 
-    role?: Role;
+    role?: Role[];
 
-    class?: string;
+    class?: string[];
 
     sort?: ProfileSort;
 

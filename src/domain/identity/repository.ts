@@ -1,12 +1,11 @@
-import { Profile, ProfileQuery, ProfileList } from "./types";
+import { Profile, ProfileQuery, ProfileList, Role } from "./types";
+
 
 export interface ProfileRepository {
 
-    getUserByID(id: string): Promise<Profile>;
+    getUserByEmail(email: string): Promise<Profile | null>;
 
-    getUserByEmail(email: string): Promise<Profile>;
-
-    getUsersByRole(role: string): Promise<Profile>;
+    getUsersByRole(role: Role): Promise<Profile[]>;
 
     getUsers(): Promise<Profile[]>;
 
@@ -16,9 +15,13 @@ export interface ProfileRepository {
 
     createMany(profiles: Profile[]): Promise<void>;
 
-    update(id: string, profile: Profile): Promise<void>;
+    update(profile: Profile): Promise<void>;
 
-    delete(id: string): Promise<void>;
+    delete(email: string): Promise<void>;
 
-    deleteMany(ids: string[]): Promise<void>;
+    deleteMany(emails: string[]): Promise<void>;
+
+    deletebyRole(role: Role): Promise<void>;
 }
+
+
