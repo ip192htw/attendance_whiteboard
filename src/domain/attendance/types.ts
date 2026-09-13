@@ -18,7 +18,9 @@ export interface ReportQuery {
 
     classes?: string[];
 
-    report_dates?: string[];
+    dateFrom?: string;
+
+    dateTo?: string;
 
     sort?: ReportSort;
 
@@ -26,7 +28,6 @@ export interface ReportQuery {
 
     pageSize: number;
 }
-
 export type ReportSort =
     | "class-asc"
     | "class-desc"

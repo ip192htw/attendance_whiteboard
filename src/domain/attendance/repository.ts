@@ -2,14 +2,21 @@ import { Report, ReportQuery, ReportList } from "./types";
 
 export interface ReportRepository {
 
-    getLatestByClass(classNo: string): Promise<Report>;
+    getByDateAndClass(
+        date: string,
+        classNo: string
+    ): Promise<Report[]>;
 
-    getLatestByDate(date: string): Promise<Report[]>;
+    getByDate(date: string): Promise<Report[]>;
 
     find(query: ReportQuery): Promise<ReportList>;
 
-    summit(report: Report): Promise<void>;
+    submit(payload: Record<string, number[]>): Promise<void>;
 
-    correct(report: Report): Promise<void>;
+    correct(
+        classNo: string,
+        reportDate: string,
+        payload: Record<string, number[]>
+    ): Promise<void>;
 
 }

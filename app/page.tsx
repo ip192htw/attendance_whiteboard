@@ -1,20 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useActionState } from "react";
+
+import { useRouter, forbidden } from "next/navigation";
 
 import { RadixMultiSelect } from "./components/ui";
 
+import { getCurrentUser } from "./actions/user";
+import { Profile } from "@/src/domain/identity/types";
+
 export default function DailyReportPage() {
 
+  const router = useRouter();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
+  const [user, setUser] = useState<Profile | null>(null);
 
   const [sickLeaveSelected, setSickLeaveSelected] = useState<string[]>([]);
   const [personalLeaveSelected, setPersonalLeaveSelected] = useState<string[]>([]);
   const [officialDutySelected, setOfficialDutySelected] = useState<string[]>([]);
   const [otherLeaveSelected, setOtherLeaveSelected] = useState<string[]>([]);
+
+  const [state, formAction, isPending] = useActionState(
+    async () => {
+      // 這裡呼叫你的 API 或 Server Action
+      setTimeout(() => {}, 3000);
+      return { success: true };
+    },
+    { success: false } // 初始 state
+  );
 
   const leaveCategories = [
     { name: "病假", selected: sickLeaveSelected, onChange: setSickLeaveSelected },
@@ -23,20 +36,46 @@ export default function DailyReportPage() {
     { name: "其他 / 曠課", selected: otherLeaveSelected, onChange: setOtherLeaveSelected },
   ];
 
+  useEffect(() => {
+    async function fetchCurrentUserProfile() {
+      try {
+        const profile = await getCurrentUser();
+        setUser(profile);
+      } catch (error) {
+        console.error("Error fetching current user profile:", error);
+      }
+    }
+
+    fetchCurrentUserProfile();
+  }, []);
+
   const numbers = Array.from({ length: 40 }, (_, i) => ({
     label: String(i + 1),
     value: String(i + 1)
   }));
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 3000);
-    }, 1000);
-  };
+  if (!user) {
+    router.push("/login");
+    return;
+  }
+
+  if (user.role == "") {
+    forbidden();
+  }
+
+  if (user.role !== "monitor") {
+    router.push("/manage");
+  }
+
+  // const handleSubmit = (e: React.SubmitEvent) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+  //   setTimeout(() => {
+  //     setIsSubmitting(false);
+  //     setSubmitted(true);
+  //     setTimeout(() => setSubmitted(false), 3000);
+  //   }, 1000);
+  // };
 
   function findOptions(selectedCategory: string): { label: string; value: string }[] {
     // 1. 收集「所有假別」已經選取的數字 (將多個子集合併成 Set)
@@ -90,10 +129,8 @@ export default function DailyReportPage() {
             
             <div className="mt-8 space-y-4">
               {/* Card Form Body */}
-              <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-8">
+              <form onSubmit={formAction} className="p-8 flex flex-col gap-8">
                 
-
-                {/* Category 3: Official Duty */}
                 {leaveCategories.map((category) => (
                   <div key={category.name} className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
@@ -111,28 +148,24 @@ export default function DailyReportPage() {
                     />
                 </div>))}
 
-                
-
-                
-
                 {/* Submit Action */}
                 <div className="flex sm:flex-row items-center justify-between pt-2 border-t border-outline-variant/40">
-                  {submitted && (
+                  {state.success && (
                     <div className="flex items-center text-tertiary-container font-label-md font-semibold bg-tertiary-fixed px-4 py-2 rounded-lg">
                       <span className="material-symbols-outlined text-base">check_circle</span>
                       今日出缺勤紀錄已成功更新並送出至生輔組！
                     </div>
                   )}
-                  {!submitted &&(
+                  {!state.success &&(
                       <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isPending}
                       className={`px-8 py-3 w-full rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm font-semibold hover:bg-primary shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer ${
-                        isSubmitting ? "opacity-70 pointer-events-none" : ""
+                        isPending ? "opacity-70 pointer-events-none" : ""
                       }`}
                     >
                       <span className="material-symbols-outlined text-[20px]">send</span>
-                      <span>{isSubmitting ? "處理中..." : "送出今日回報"}</span>
+                      <span>{isPending ? "處理中..." : "送出今日回報"}</span>
                     </button>
                   )}
                 </div>

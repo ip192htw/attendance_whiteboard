@@ -16,6 +16,7 @@ export interface Profile {
 }
 
 export type Role =
+    | ''
     | 'monitor'
     | 'instructor'
     | 'supervisor'

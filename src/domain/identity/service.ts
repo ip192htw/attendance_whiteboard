@@ -21,15 +21,21 @@ class DefaultCurrentUser
         const user = await this.userProvider.get();
 
         if (!user?.email) {
-            console.log("Current user has no email or is not logged in.");
             return null;
         }
 
         const profile = await this.profileRepository.getUserByEmail(user.email!);
 
         if (!profile) {
-            console.log("Current user profile not found in the repository.");
-            return null;
+            return {
+                email: "",
+                auth_user_id: "",
+                name: "",
+                role: "",
+                class: "",
+                created_at: "",
+                updated_at: ""
+            };
         }
 
         return profile;

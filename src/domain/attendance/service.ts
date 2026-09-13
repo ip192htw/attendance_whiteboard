@@ -2,14 +2,22 @@ import { ReportRepository } from "./repository";
 
 export interface ReportService {
 
-    getReportByID(id: string): Promise<Report>;
+    getReportsByDate(date: string): Promise<Report[]>;
 
 }
 
-class DefaultReportService {
+class DefaultReportService
+    implements ReportService {
 
     constructor(
         private readonly repository: ReportRepository
     ) {}
 
+
+}
+
+export function createReportService(
+    repository: ReportRepository
+): ReportService {
+    return new DefaultReportService(repository);
 }
