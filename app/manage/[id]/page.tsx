@@ -27,11 +27,7 @@ const mockStudents: StudentRecord[] = [
   { seatNo: "21", name: "謝易達", todayStatus: "personal", todayNote: "護照辦理請假", monthlyAbsences: 1, attendanceRate: "97.6%" },
 ];
 
-export default function ClassDetailPage({
-  params,
-}: {
-  params?: Promise<{ id?: string }>;
-}) {
+export default function ClassDetailPage({params,}: {params?: Promise<{ id?: string }>;}) {
   const [activeRange, setActiveRange] = useState<"today" | "week" | "month">("today");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 

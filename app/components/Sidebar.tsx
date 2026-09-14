@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { signOut } from "../actions/auth";
+
 interface NavItem {
   name: string;
   href: string;
@@ -11,11 +13,9 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: "風紀回報", href: "/daily-report", icon: "fact_check" },
-  { name: "教官統計 Dashboard", href: "/", icon: "query_stats", exact: true },
-  { name: "班級詳細歷史", href: "/class-detail", icon: "calendar_month" },
-  { name: "人員管理", href: "/settings#section-personnel", icon: "manage_accounts" },
-  { name: "系統設定", href: "/settings", icon: "settings" },
+  { name: "首頁", href: "/manage", icon: "query_stats", exact: true },
+  { name: "人員管理", href: "/manage/settings#section-personnel", icon: "manage_accounts" },
+  { name: "系統設定", href: "/manage/settings", icon: "settings" },
 ];
 
 export default function Sidebar() {
@@ -27,6 +27,11 @@ export default function Sidebar() {
     }
     return pathname.startsWith(item.href.split("#")[0]);
   };
+
+  const handleSignOut = async () => {
+    alert("signed out")
+    await signOut()
+  }
 
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-60 z-40 bg-surface-container-low border-r border-outline-variant flex flex-col justify-between select-none">
@@ -80,14 +85,13 @@ export default function Sidebar() {
       {/* System Live Node Status Footer */}
       <div className="p-space-md border-t border-outline-variant bg-surface-container-low">
         <div className="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest rounded-lg border border-outline-variant">
-          <div className="w-2 h-2 rounded-full bg-tertiary-container animate-pulse" />
+          <div className="w-2 h-2 " />
           <div className="flex flex-col">
-            <span className="font-label-sm text-label-sm text-on-surface font-medium">
-              系統連線正常
-            </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant">
-              即時資料庫同步中
-            </span>
+            <button onClick={handleSignOut} >
+              <span className="font-label-sm text-label-sm text-on-surface-variant">
+                登出
+              </span>
+            </button>
           </div>
         </div>
       </div>
