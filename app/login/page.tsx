@@ -25,7 +25,7 @@ export default function LoginPage() {
 
           {/* Primary Authentication Container */}
           <div className="relative w-full max-w-120 bg-surface-container-lowest shadow-xl rounded-xl p-6 sm:p-10 transition-all duration-300">
-            {/* Header Block */}s
+            {/* Header Block */}
             <div className="text-center mb-8">
                 <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
                   學務處學生缺曠回報

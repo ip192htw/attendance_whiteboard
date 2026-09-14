@@ -1,8 +1,8 @@
 import { createContainer } from '@/src/container';
 
-const container = await createContainer();
+
 
 export async function getReportConfig() {
-    
+    const container = await createContainer();
     return container.settingsService.getReportConfig();
 }

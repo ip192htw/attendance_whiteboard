@@ -1,23 +1,23 @@
-import { ReportRepository } from "./repository";
+// import { ReportRepository } from "./repository";
 
-export interface ReportService {
+// export interface ReportService {
 
-    getReportsByDate(date: string): Promise<Report[]>;
+//     getReportsByDate(date: string): Promise<Report[]>;
 
-}
+// }
 
-class DefaultReportService
-    implements ReportService {
+// class DefaultReportService
+//     implements ReportService {
 
-    constructor(
-        private readonly repository: ReportRepository
-    ) {}
+//     constructor(
+//         private readonly repository: ReportRepository
+//     ) {}
 
 
-}
+// }
 
-export function createReportService(
-    repository: ReportRepository
-): ReportService {
-    return new DefaultReportService(repository);
-}
+// export function createReportService(
+//     repository: ReportRepository
+// ): ReportService {
+//     return new DefaultReportService(repository);
+// }

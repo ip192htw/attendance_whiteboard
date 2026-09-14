@@ -6,6 +6,7 @@ import { useState, useActionState } from "react";
 import { Report } from "@/src/domain/attendance"
 
 
+
 export function ReportCard({ report }: {report: Report}) {
 
     const [sickLeaveSelected, setSickLeaveSelected] = useState<string[]>([]);

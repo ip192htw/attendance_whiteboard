@@ -1,8 +1,10 @@
-import { redirect, forbidden } from "next/navigation";
+import { redirect, forbidden, unauthorized } from "next/navigation";
 
-import { getCurrentUser } from "./actions/user";
+import { getCurrentUser } from "./actions";
 
-import { ReportCard } from "./components/RrportCard";
+import { SignOutButton } from "./components/ui";
+
+import { ReportCard } from "./components/ReportCard";
 
 export default async function DailyReportPage() {
 
@@ -10,10 +12,9 @@ export default async function DailyReportPage() {
 
   if (!!!user) redirect("/login");
 
-  if (user.role == "") forbidden();
+  if (user.role == "") unauthorized();
 
   if (user.role !== "monitor") redirect("/manage");
-
 
   
   return (
@@ -32,33 +33,21 @@ export default async function DailyReportPage() {
 
           {/* Primary Authentication Container */}
           <div className="relative w-full max-w-120 bg-surface-container-lowest shadow-xl rounded-xl p-6 sm:p-10 transition-all duration-300">
-            {/* Header Block */}s
+            {/* Header Block */}
             <div className="text-center mb-8">
                 <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
                   學務處學生缺曠回報
                 </h1>
-                <p className="text-on-surface-variant font-body-md">
-                  {user.class}
+                <p className="text-on-surface-variant text-2xl">
+                  {user.class}班  
                 </p>
             </div>
             
             <ReportCard report={ {id:"", class: "", report_date: "", submitted_by: "", submitted_at: "", payload: {}}} />
-
-            {/* Administrative Contact Section */}
-            <div className="mt-6 pt-4 flex items-center justify-between text-secondary border-t border-outline-variant/40">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-base text-primary">
-                  contact_support
-                </span>
-                <span className="font-body-sm text-body-sm">
-                  若無法登入或，請洽{" "}
-                  <span className="font-semibold text-on-surface">
-                    生輔組。
-                  </span>
-                </span>
-              </div>
+            
+            <div className="flex justify-center">
+              <SignOutButton />
             </div>
-
             {/* Footer Inside Card */}
             <div className="mt-8 pt-4 bg-surface-container-high/30 -mx-6 sm:-mx-10 -mb-6 sm:-mb-10 p-4 rounded-b-xl flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-2">
               <span className="font-label-sm text-label-sm text-secondary tracking-wider">

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { signOut } from "../actions/auth";
+import { SignOutButton } from "./ui";
 
 interface NavItem {
   name: string;
@@ -28,25 +28,22 @@ export default function Sidebar() {
     return pathname.startsWith(item.href.split("#")[0]);
   };
 
-  const handleSignOut = async () => {
-    alert("signed out")
-    await signOut()
-  }
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-60 z-40 bg-surface-container-low border-r border-outline-variant flex flex-col justify-between select-none">
+    <aside className="fixed left-0 top-0 bottom-0 w-72 z-40 bg-surface-container-low border-r border-outline-variant flex flex-col justify-between select-none -translate-x-full md:translate-x-0 transition-transform duration-300">
       <div className="flex flex-col">
         {/* Brand Header */}
-        <div className="h-16 px-space-lg flex items-center gap-space-sm border-b border-outline-variant bg-surface-container-lowest">
-          <div className="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-display font-semibold text-label-lg shadow-sm">
-            校
-          </div>
+        <div className="h-32 px-space-lg flex items-center gap-space-sm border-b border-outline-variant bg-surface-container-lowest">
+          <img
+            src="../favicon.ico"
+            className="w-16 h-16 rounded-lg"
+          />
           <div className="flex flex-col">
-            <span className="font-headline-sm text-headline-sm text-primary leading-tight">
-              校園白板
+            <span className="font-bold text-2xl text-primary leading-tight">
+              學務處生輔組
             </span>
             <span className="font-label-sm text-label-sm text-on-surface-variant">
-              出缺勤回報系統
+              學生缺曠回報系統
             </span>
           </div>
         </div>
@@ -80,19 +77,8 @@ export default function Sidebar() {
             );
           })}
         </nav>
-      </div>
-
-      {/* System Live Node Status Footer */}
-      <div className="p-space-md border-t border-outline-variant bg-surface-container-low">
-        <div className="flex items-center gap-space-sm p-space-sm bg-surface-container-lowest rounded-lg border border-outline-variant">
-          <div className="w-2 h-2 " />
-          <div className="flex flex-col">
-            <button onClick={handleSignOut} >
-              <span className="font-label-sm text-label-sm text-on-surface-variant">
-                登出
-              </span>
-            </button>
-          </div>
+        <div className="flex justify-center">
+          <SignOutButton />
         </div>
       </div>
     </aside>

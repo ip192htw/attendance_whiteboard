@@ -50,21 +50,9 @@ export default function DashboardPage() {
       {/* Top Header & Grade Tabs */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-space-md pb-space-sm">
         <div className="flex flex-col">
-          <div className="flex items-center gap-space-sm mb-space-xs">
-            <span className="font-label-sm text-label-sm text-primary-container bg-primary-fixed/60 px-2 py-0.5 rounded uppercase tracking-wider font-semibold">
-              生活輔導督導記錄
-            </span>
-            <span className="text-outline-variant">•</span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant">
-              軍訓督導室同步中
-            </span>
-          </div>
-          <h1 className="font-display text-display text-primary tracking-tight font-bold">
+          <h1 className="font-display text-4xl text-primary tracking-tight font-bold">
             今日全校回報概況
           </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-            2024年10月15日 (二) · 午間常態回報時段 (13:30 - 14:30) · 第 8 週常態查核
-          </p>
         </div>
 
         {/* Grade Filter Segmented Control */}
@@ -282,7 +270,6 @@ export default function DashboardPage() {
             <thead>
               <tr className="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase border-b border-outline-variant">
                 <th className="py-3 px-space-lg">班級名稱</th>
-                <th className="py-3 px-space-md">導師</th>
                 <th className="py-3 px-space-md">回報狀態</th>
                 <th className="py-3 px-space-md">缺席人數</th>
                 <th className="py-3 px-space-md">送出時間 / 風紀</th>
@@ -297,9 +284,6 @@ export default function DashboardPage() {
                 >
                   <td className="py-3.5 px-space-lg font-semibold text-on-surface">
                     {item.name}
-                  </td>
-                  <td className="py-3.5 px-space-md text-on-surface-variant">
-                    {item.teacher} 老師
                   </td>
                   <td className="py-3.5 px-space-md">
                     {item.status === "reported" && (

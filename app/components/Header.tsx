@@ -1,6 +1,6 @@
-import { redirect, forbidden } from "next/navigation";
+import { redirect, forbidden, unauthorized } from "next/navigation";
 
-import { getCurrentUser, getReportConfig } from "../actions";
+import { getCurrentUser } from "../actions";
 
 export default async function Header() {
 
@@ -8,13 +8,11 @@ export default async function Header() {
 
   const today = new Date()
 
-  const config = await getReportConfig()
-
   if (!!!user) redirect("/login");
 
-  if (user.role == "") forbidden();
+  if (user.role == "") unauthorized();
 
-  if (user.role == "monitor") redirect("/");
+  if (user.role == "monitor") forbidden();
   type FormattedDateString = `${number}年${number}月${number}日 (${string})`;
 
   function getFormattedDate(date: Date = new Date()): FormattedDateString {
@@ -29,24 +27,14 @@ export default async function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant z-30 flex items-center justify-between px-space-xl">
-      <div className="flex items-center gap-space-md">
-        <div className="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container rounded-full border border-outline-variant">
-          <span className="material-symbols-outlined text-primary text-[18px]">
-            event
-          </span>
-          <span className="font-label-md text-label-md text-on-surface font-medium">
-            115學年度 第一學期 · {getFormattedDate(today)}
-          </span>
-        </div>
-        <div className="flex items-center gap-space-xs px-space-md py-space-xs bg-tertiary-fixed text-on-tertiary-fixed rounded-full">
-          <span className="material-symbols-outlined text-[16px]">
-            schedule
-          </span>
-          <span className="font-label-md text-label-md font-semibold">
-            回報時段 {config?.report_start_time} - {config?.report_end_time}
-          </span>
-        </div>
+    <header className="fixed top-0 left-0 md:left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant z-30 flex items-center justify-between px-space-md md:px-space-xl">
+      <div className="flex items-center gap-space-xs md:gap-space-md">
+        <button className="md:hidden p-2 text-on-surface" id="toggle-sidebar">
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+        <span className="font-md text-md text-on-surface font-medium">
+            {getFormattedDate(today)}
+        </span>
       </div>
 
       <div className="flex items-center gap-space-md">
@@ -54,14 +42,8 @@ export default async function Header() {
         <div className="flex items-center gap-space-sm pl-space-md border-l border-outline-variant">
           <div className="flex flex-col text-right">
             <span className="font-label-lg text-label-lg text-on-surface font-semibold leading-tight">
-              生輔組長 / 林組長
+              {user.name}
             </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant">
-              學務處生活輔導組
-            </span>
-          </div>
-          <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary font-bold flex items-center justify-center text-xs border border-outline-variant shadow-sm">
-            林
           </div>
         </div>
       </div>

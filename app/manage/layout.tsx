@@ -11,8 +11,8 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-surface">
       <Sidebar />
       <Header />
-      <main className="pl-60 pt-16 w-full min-h-screen bg-surface">
-        <div className="max-w-[1240px] mx-auto p-space-xl">{children}</div>
+      <main className="pl-0 md:pl-72 pt-16 w-full min-h-screen bg-surface">
+        <div className="max-w-310 mx-auto p-4 sm:p-space-md md:p-space-xl">{children}</div>
       </main>
     </div>
   );

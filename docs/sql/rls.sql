@@ -54,26 +54,24 @@ USING (
 );
 
 CREATE OR REPLACE FUNCTION identity.prevent_user_column_tampering()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
 DECLARE
-    -- 直接在宣告區段完成屬性提取，完全跳過內文賦值語法
-    current_role text := (identity.current_user()).role;
+    app_role text := (identity.current_user()).role::text;
 BEGIN
     NEW.updated_at := NOW();
 
-    -- 如果不是 instructor 或 supervisor，代表是一般個人
-    IF current_role IS NULL OR current_role NOT IN ('instructor', 'supervisor') THEN
-        NEW.name := OLD.name;
+    IF app_role NOT IN ('instructor', 'supervisor') THEN
         NEW.email := OLD.email;
         NEW.class := OLD.class;
         NEW.role := OLD.role;
         NEW.created_at := OLD.created_at;
-        -- 將所有不允許改的欄位鎖死，只留 NEW.auth_user_id 與 NEW.updated_at 可以更新
     END IF;
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS enforce_user_update_restrictions ON identity.users;
 
