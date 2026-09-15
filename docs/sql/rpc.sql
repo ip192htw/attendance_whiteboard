@@ -50,7 +50,7 @@ BEGIN
         ) THEN
             RAISE EXCEPTION USING
                 ERRCODE = 'P0001',
-                MESSAGE = 'INVALID_LEAVE_TYPE',
+                MESSAGE = 'INVALID_PAYLOAD',
                 DETAIL = v_key;
         END IF;
     END LOOP;
@@ -95,7 +95,7 @@ BEGIN
             IF jsonb_typeof(v_student) <> 'number' THEN
                 RAISE EXCEPTION USING
                     ERRCODE = 'P0001',
-                    MESSAGE = 'INVALID_STUDENT_NUMBER';
+                    MESSAGE = 'INVALID_PAYLOAD';
             END IF;
 
 
@@ -114,7 +114,7 @@ BEGIN
             IF v_student::TEXT !~ '^[0-9]+$' THEN
                 RAISE EXCEPTION USING
                     ERRCODE = 'P0001',
-                    MESSAGE = 'INVALID_STUDENT_NUMBER';
+                    MESSAGE = 'INVALID_PAYLOAD';
             END IF;
 
 
@@ -128,7 +128,7 @@ BEGIN
             IF v_student_number <= 0 THEN
                 RAISE EXCEPTION USING
                     ERRCODE = 'P0001',
-                    MESSAGE = 'INVALID_STUDENT_NUMBER';
+                    MESSAGE = 'INVALID_PAYLOAD';
             END IF;
 
 
@@ -140,7 +140,7 @@ BEGIN
             IF v_student_number = ANY(v_seen_students) THEN
                 RAISE EXCEPTION USING
                     ERRCODE = 'P0001',
-                    MESSAGE = 'DUPLICATE_STUDENT',
+                    MESSAGE = 'INVALID_PAYLOAD',
                     DETAIL = v_student_number::TEXT;
             END IF;
 
@@ -173,6 +173,8 @@ DECLARE
     v_start_time TIME;
     v_end_time TIME;
     v_cooldown_seconds INTEGER;
+    v_semester_start_date DATE;
+    v_semester_end_date DATE;
 
     v_latest_submitted_at TIMESTAMPTZ;
 
@@ -241,6 +243,28 @@ BEGIN
      * ---------------------------------------------------------
      */
 
+    SELECT value::DATE
+    INTO v_semester_start_date
+    FROM system.settings
+    WHERE key = 'semester_start_date';
+
+    IF v_semester_start_date IS NULL THEN
+        RAISE EXCEPTION USING
+            ERRCODE = 'P0001',
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
+    END IF;
+
+    SELECT value::DATE
+    INTO v_semester_end_date
+    FROM system.settings
+    WHERE key = 'semester_end_date';
+
+    IF v_semester_end_date IS NULL THEN
+        RAISE EXCEPTION USING
+            ERRCODE = 'P0001',
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
+    END IF;
+
     SELECT value::TIME
     INTO v_start_time
     FROM system.settings
@@ -249,7 +273,7 @@ BEGIN
     IF v_start_time IS NULL THEN
         RAISE EXCEPTION USING
             ERRCODE = 'P0001',
-            MESSAGE = 'REPORT_START_TIME_NOT_CONFIGURED';
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
     END IF;
 
 
@@ -261,7 +285,7 @@ BEGIN
     IF v_end_time IS NULL THEN
         RAISE EXCEPTION USING
             ERRCODE = 'P0001',
-            MESSAGE = 'REPORT_END_TIME_NOT_CONFIGURED';
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
     END IF;
 
 
@@ -273,13 +297,13 @@ BEGIN
     IF v_cooldown_seconds IS NULL THEN
         RAISE EXCEPTION USING
             ERRCODE = 'P0001',
-            MESSAGE = 'REPORT_COOLDOWN_NOT_CONFIGURED';
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
     END IF;
 
     IF v_cooldown_seconds < 0 THEN
         RAISE EXCEPTION USING
             ERRCODE = 'P0001',
-            MESSAGE = 'INVALID_REPORT_COOLDOWN';
+            MESSAGE = 'SETTINGS_NOT_CONFIGURED';
     END IF;
 
 
@@ -290,10 +314,25 @@ BEGIN
      *
      * Current version assumes:
      *
+     * start_date <= end_date,
      * start_time <= end_time
      *
      * and the reporting window does not cross midnight.
      */
+
+    IF v_report_date < v_semester_start_date
+    OR v_report_date > v_semester_end_date
+    THEN
+        RAISE EXCEPTION USING
+            ERRCODE = 'P0001',
+            MESSAGE = 'REPORT_NOT_ALLOWED';
+    END IF;
+
+    IF EXTRACT(ISODOW FROM v_report_date) IN (6, 7) THEN
+        RAISE EXCEPTION USING
+            ERRCODE = 'P0001',
+            MESSAGE = 'REPORT_NOT_ALLOWED';
+    END IF;
 
     IF v_local_now::TIME < v_start_time
     OR v_local_now::TIME > v_end_time
@@ -372,7 +411,7 @@ BEGIN
     VALUES (
         v_user.class,
         v_report_date,
-        v_user.email,
+        v_user.name,
         v_now,
         p_payload
     )

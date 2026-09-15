@@ -1,13 +1,15 @@
 'use client'
 
 import { RadixMultiSelect } from "./ui";
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 
-import { Report } from "@/src/domain/attendance"
 
 import { submitReport } from "@/app/actions/report"
 
-export function ReportCard({ report }: {report: Report}) {
+export function ReportCard({cooldown_seconds} : { cooldown_seconds: string}) {
+
+    const [cooldown, setCooldown] = useState(0);
+    const [submittedAt, setSubmittedAt] = useState(new Date("2022-03-25"));
 
     const [sickLeaveSelected, setSickLeaveSelected] = useState<string[]>([]);
     const [personalLeaveSelected, setPersonalLeaveSelected] = useState<string[]>([]);
@@ -15,6 +17,7 @@ export function ReportCard({ report }: {report: Report}) {
     const [otherLeaveSelected, setOtherLeaveSelected] = useState<string[]>([]);
     const [state, formAction, isPending] = useActionState(
         async () => {
+          setSubmittedAt(new Date())
           return await submitReport({
               sick: sickLeaveSelected.map(v => parseInt(v, 10)),
               personal: personalLeaveSelected.map(v => parseInt(v, 10)),
@@ -26,18 +29,33 @@ export function ReportCard({ report }: {report: Report}) {
     );
 
 
+    useEffect(() => {
+        const update = () => {
+            setCooldown(
+                getRemainingCooldown(
+                    submittedAt,
+                    +cooldown_seconds
+                ),
+            );
+        };
+
+        update();
+
+        const timer = setInterval(update, 1000);
+
+        return () => clearInterval(timer);
+    }, [cooldown_seconds]);
+
+
     const errorMessages: Record<string, string> = {
       REPORT_NOT_ALLOWED: "目前不在今日回報時間內。",
       REPORT_COOLDOWN: "剛才已經送出回報，請稍後再試。",
-      INVALID_PAYLOAD: "回報資料格式錯誤。",
-      INVALID_LEAVE_TYPE: "包含無效的假別。",
-      INVALID_STUDENT_NUMBER: "包含無效的座號。",
-      DUPLICATE_STUDENT: "同一位學生不能同時選擇不同假別。",
+      INVALID_PAYLOAD: "回報資料錯誤。",
       UNAUTHORIZED: "目前登入狀態無效，請重新登入。",
       NOT_MONITOR: "目前帳號沒有風紀回報權限。",
       INVALID_MONITOR_CLASS: "目前帳號沒有設定班級。",
       INTERNAL_ERROR: "系統發生錯誤，請稍後再試。",
-  };
+    };
 
     const leaveCategories = [
         { name: "病假", selected: sickLeaveSelected, onChange: setSickLeaveSelected },
@@ -50,6 +68,19 @@ export function ReportCard({ report }: {report: Report}) {
         label: String(i + 1),
         value: String(i + 1)
     }));
+
+    function getRemainingCooldown(
+        submittedAt: Date,
+        cooldownSeconds: number,
+    ): number {
+        const elapsed =
+            (Date.now() - submittedAt.getTime()) / 1000;
+
+        return Math.max(
+            0,
+            Math.ceil(cooldownSeconds - elapsed),
+        );
+    }
 
     function findOptions(selectedCategory: string): { label: string; value: string }[] {
         // 1. 收集「所有假別」已經選取的數字 (將多個子集合併成 Set)
@@ -102,7 +133,6 @@ export function ReportCard({ report }: {report: Report}) {
                 <div className="flex sm:flex-col gap-1.5 items-center justify-between pt-2 border-t border-outline-variant/40">
                   {state.success && (
                     <div className="flex items-center text-tertiary-container font-semibold bg-tertiary-fixed px-4 py-2 rounded-lg">
-                      <span className="material-symbols-outlined text-base">check_circle</span>
                       今日出缺勤紀錄已成功更新並送出至生輔組！
                     </div>
                   )}
@@ -120,14 +150,33 @@ export function ReportCard({ report }: {report: Report}) {
                   
                   <button
                     type="submit"
-                    disabled={isPending}
-                    className={`px-8 py-3 w-full rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm font-semibold hover:bg-primary shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer ${
-                      isPending ? "opacity-70 pointer-events-none" : ""
+                    disabled={isPending || cooldown > 0}
+                    className={`px-8 py-3 w-full rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm font-semibold shadow-md transition-all flex items-center justify-center gap-2 ${
+                        isPending || cooldown > 0
+                            ? "opacity-70 cursor-not-allowed"
+                            : "hover:bg-primary hover:shadow-lg cursor-pointer"
                     }`}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">send</span>
-                    <span>{isPending ? "處理中..." : "送出今日回報"}</span>
-                  </button>
+                >
+                    <span className="material-symbols-outlined text-[20px]">
+                        {isPending
+                            ? "progress_activity"
+                            : cooldown > 0
+                                ? "schedule"
+                                : "send"}
+                    </span>
+
+                    <span>
+                        {isPending
+                            ? "處理中..."
+                            : cooldown > 0
+                                ? `請稍候 ${Math.floor(cooldown / 60)
+                                    .toString()
+                                    .padStart(2, "0")}:${(cooldown % 60)
+                                    .toString()
+                                    .padStart(2, "0")}`
+                                : "送出今日回報"}
+                    </span>
+                </button>
                   
                 </div>
               </form>

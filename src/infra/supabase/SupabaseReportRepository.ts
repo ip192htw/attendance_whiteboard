@@ -29,14 +29,8 @@ export class SupabaseReportRepository
             "INVALID_MONITOR_CLASS",
             "REPORT_NOT_ALLOWED",
             "REPORT_COOLDOWN",
-            "REPORT_START_TIME_NOT_CONFIGURED",
-            "REPORT_END_TIME_NOT_CONFIGURED",
-            "REPORT_COOLDOWN_NOT_CONFIGURED",
-            "INVALID_REPORT_COOLDOWN",
+            "SETTINGS_NOT_CONFIGURED",
             "INVALID_PAYLOAD",
-            "INVALID_LEAVE_TYPE",
-            "INVALID_STUDENT_NUMBER",
-            "DUPLICATE_STUDENT",
         ].includes(value as ReportSubmissionErrorCode);
     }
 
@@ -96,6 +90,7 @@ export class SupabaseReportRepository
             error.code === "P0001" &&
             this.isReportSubmissionErrorCode(error.message)
         ) {
+            console.log("Report submission error:", error.message);
             throw new ReportSubmissionError(error.message);
         }
 

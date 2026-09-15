@@ -8,6 +8,8 @@ export interface ReportConfig {
 
     report_end_time: string;
 
+    report_cooldown_seconds: string;
+
     semester_start: string;
 
     semester_end: string;
@@ -36,8 +38,9 @@ implements SettingsService {
         const keys = [
             "report_start_time",
             "report_end_time",
-            "semester_start",
-            "semester_end"
+            "report_cooldown_seconds",
+            "semester_start_date",
+            "semester_end_date",
         ];
 
         const settings = await this.settingsRepository.getMany(keys);
@@ -51,8 +54,9 @@ implements SettingsService {
         const config: ReportConfig = {
             report_start_time: settingsMap.get("report_start_time") || "",
             report_end_time: settingsMap.get("report_end_time") || "",
-            semester_start: settingsMap.get("semester_start") || "",
-            semester_end: settingsMap.get("semester_end") || "",
+            report_cooldown_seconds: settingsMap.get("report_cooldown_seconds") || "",
+            semester_start: settingsMap.get("semester_start_date") || "",
+            semester_end: settingsMap.get("semester_end_date") || "",
         };
 
         return config;

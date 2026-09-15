@@ -1,6 +1,8 @@
 import { redirect, unauthorized } from "next/navigation";
 
-import { getCurrentUser } from "./actions";
+import { getCurrentUser, getReportConfig } from "./actions";
+
+import { ReportConfig } from "@/src/domain/system/service";
 
 import { SignOutButton } from "./components/ui";
 
@@ -16,6 +18,66 @@ export default async function DailyReportPage() {
 
   if (user.role !== "monitor") redirect("/manage");
 
+  const reportConfig = await getReportConfig()
+
+  type ReportAvailability = {
+      allowed: boolean;
+      message?: string;
+  };
+
+console.log(reportConfig)
+
+  function checkReportAvailability(): ReportAvailability {
+    const now = new Date()
+    const date = now.toLocaleDateString('en-CA')
+
+    if (!reportConfig) return {allowed: false};
+
+    if (date < reportConfig.semester_start) {
+      return {
+        allowed: false,
+        message: `本學期尚未開始`,
+      };
+    }
+
+    if (date > reportConfig.semester_end) {
+      return {
+        allowed: false,
+        message: `本學期已結束`,
+      };
+    }
+
+    const day = now.getDay();
+
+    if (day === 0 || day === 6) {
+      return {
+        allowed: false,
+        message: "今日非回報日",
+      };
+    }
+
+    const time = now.toTimeString().split(' ')[0]
+
+    if (time < reportConfig.report_start_time) {
+        return {
+            allowed: false,
+            message: "今日回報尚未開始",
+        };
+    }
+
+    if (time > reportConfig.report_end_time) {
+        return {
+            allowed: false,
+            message: "今日回報時間已結束",
+        };
+    }
+
+    return {
+      allowed: true,
+    };
+  }
+
+  const allow = checkReportAvailability()
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface font-body-md text-on-surface antialiased">
@@ -42,8 +104,12 @@ export default async function DailyReportPage() {
                   {user.class}班  
                 </p>
             </div>
+
+            {!allow.allowed && (<h1 className="text-2xl text-center text-on-surface mb-space-sm tracking-tight font-bold">
+              {allow.message}
+            </h1>)}
             
-            <ReportCard report={ {id:"", class: "", report_date: "", submitted_by: "", submitted_at: "", payload: {}}} />
+            {allow.allowed && (<ReportCard cooldown_seconds={reportConfig?.report_cooldown_seconds!} />)}
             
             <div className="flex justify-center">
               <SignOutButton />
