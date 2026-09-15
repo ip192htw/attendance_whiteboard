@@ -167,6 +167,7 @@ DECLARE
     v_user identity.users;
 
     v_now TIMESTAMPTZ;
+    v_local_now TIMESTAMP;
     v_report_date DATE;
 
     v_start_time TIME;
@@ -183,25 +184,6 @@ DECLARE
 
     v_report attendance.reports;
 BEGIN
-    /*
-     * ---------------------------------------------------------
-     * 1. Basic payload validation
-     * ---------------------------------------------------------
-     */
-
-    IF p_payload IS NULL THEN
-        RAISE EXCEPTION USING
-            ERRCODE = 'P0001',
-            MESSAGE = 'INVALID_PAYLOAD';
-    END IF;
-
-    IF jsonb_typeof(p_payload) <> 'object' THEN
-        RAISE EXCEPTION USING
-            ERRCODE = 'P0001',
-            MESSAGE = 'INVALID_PAYLOAD';
-    END IF;
-
-
     /*
      * ---------------------------------------------------------
      * 2. Resolve current application user
@@ -249,7 +231,8 @@ BEGIN
      */
 
     v_now := now();
-    v_report_date := v_now::DATE;
+    v_local_now := v_now AT TIME ZONE 'Asia/Taipei';
+    v_report_date := v_local_now::DATE;
 
 
     /*
@@ -312,8 +295,8 @@ BEGIN
      * and the reporting window does not cross midnight.
      */
 
-    IF v_now::TIME < v_start_time
-       OR v_now::TIME > v_end_time
+    IF v_local_now::TIME < v_start_time
+    OR v_local_now::TIME > v_end_time
     THEN
         RAISE EXCEPTION USING
             ERRCODE = 'P0001',

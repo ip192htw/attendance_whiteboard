@@ -19,12 +19,18 @@ import {
     createSettingsService
 } from "../domain/system";
 
+import {
+    ReportService,
+    createReportService
+} from '../domain/attendance';
+
 
 import {
     SupabaseUserProvider,
     SupabaseProfileRepository,
     SupabaseSessionProvider,
-    SupabaseSettingsRepository
+    SupabaseSettingsRepository,
+    SupabaseReportRepository
 } from '../infra/supabase';
 
 export interface Container {
@@ -34,6 +40,8 @@ export interface Container {
     sessionService: SessionService;
 
     settingsService: SettingsService;
+
+    reportService: ReportService;
 
 }
 
@@ -45,6 +53,7 @@ export const createContainer = cache(async (): Promise<Container> => {
 
     const profileRepository = new SupabaseProfileRepository(supabase);
     const settingsRepository = new SupabaseSettingsRepository(supabase);
+    const reportRepository = new SupabaseReportRepository(supabase);
 
     const userProvider = new SupabaseUserProvider(supabase);
     const sessionProvider = new SupabaseSessionProvider(supabase);
@@ -55,10 +64,13 @@ export const createContainer = cache(async (): Promise<Container> => {
 
     const settingsService = createSettingsService(settingsRepository);
 
+    const reportService = createReportService(reportRepository);
+
     return {
         currentUser,
         sessionService,
-        settingsService
+        settingsService,
+        reportService
     };
 
 

@@ -1,6 +1,11 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { ReportRepository, Report, ReportList, ReportQuery } from "../../domain/attendance";
+import {
+    ReportRepository,
+    Report, ReportList, ReportQuery,
+    ReportSubmissionErrorCode,
+    ReportSubmissionError
+} from "../../domain/attendance";
 
 export class SupabaseReportRepository 
     implements ReportRepository {
@@ -13,6 +18,26 @@ export class SupabaseReportRepository
         return this.client
             .schema("attendance")
             .from("reports");
+    }
+
+    private isReportSubmissionErrorCode(
+        value: string
+    ): value is ReportSubmissionErrorCode {
+        return [
+            "UNAUTHORIZED",
+            "NOT_MONITOR",
+            "INVALID_MONITOR_CLASS",
+            "REPORT_NOT_ALLOWED",
+            "REPORT_COOLDOWN",
+            "REPORT_START_TIME_NOT_CONFIGURED",
+            "REPORT_END_TIME_NOT_CONFIGURED",
+            "REPORT_COOLDOWN_NOT_CONFIGURED",
+            "INVALID_REPORT_COOLDOWN",
+            "INVALID_PAYLOAD",
+            "INVALID_LEAVE_TYPE",
+            "INVALID_STUDENT_NUMBER",
+            "DUPLICATE_STUDENT",
+        ].includes(value as ReportSubmissionErrorCode);
     }
 
     async getByDateAndClass(
@@ -58,13 +83,23 @@ export class SupabaseReportRepository
 
     async submit(payload: Record<string, number[]>): Promise<void> {
         const { error } = await this.client
-            .rpc("summit_report", {
-                payload: payload,
+            .schema("attendance")
+            .rpc("submit_report", {
+                p_payload: payload,
             });
 
-        if (error) {
-            throw error;
+        if (!error) {
+            return;
         }
+
+        if (
+            error.code === "P0001" &&
+            this.isReportSubmissionErrorCode(error.message)
+        ) {
+            throw new ReportSubmissionError(error.message);
+        }
+
+        throw error;
     }
 
     async correct(
@@ -73,6 +108,7 @@ export class SupabaseReportRepository
         payload: Record<string, number[]>
     ): Promise<void> {
         const { error } = await this.client
+            .schema("attendance")
             .rpc("correct_report", {
                 class: classNo,
                 report_date: reportDate,

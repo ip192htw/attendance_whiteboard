@@ -2,6 +2,8 @@ import { redirect, forbidden, unauthorized } from "next/navigation";
 
 import { getCurrentUser } from "../actions";
 
+import { SidebarToggleButton } from "./SidebarToggleButton";
+
 export default async function Header() {
 
   const user = await getCurrentUser()
@@ -29,9 +31,7 @@ export default async function Header() {
   return (
     <header className="fixed top-0 left-0 md:left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant z-30 flex items-center justify-between px-space-md md:px-space-xl">
       <div className="flex items-center gap-space-xs md:gap-space-md">
-        <button className="md:hidden p-2 text-on-surface" id="toggle-sidebar">
-          <span className="material-symbols-outlined">menu</span>
-        </button>
+        <SidebarToggleButton />
         <span className="font-md text-md text-on-surface font-medium">
             {getFormattedDate(today)}
         </span>

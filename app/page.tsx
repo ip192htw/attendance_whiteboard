@@ -1,4 +1,4 @@
-import { redirect, forbidden, unauthorized } from "next/navigation";
+import { redirect, unauthorized } from "next/navigation";
 
 import { getCurrentUser } from "./actions";
 

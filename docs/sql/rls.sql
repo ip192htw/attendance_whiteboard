@@ -127,3 +127,12 @@ USING (
         WHERE auth_user_id = auth.uid()
     )
 )
+
+
+CREATE POLICY "settings_update"
+ON system.settings
+FOR UPDATE
+TO authenticated
+USING (
+    (identity.current_user()).role IN ('instructor', 'supervisor')
+)
