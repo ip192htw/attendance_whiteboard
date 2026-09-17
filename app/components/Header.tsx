@@ -8,24 +8,24 @@ export default async function Header() {
 
   const user = await getCurrentUser()
 
-  const today = new Date()
-
   if (!!!user) redirect("/login");
 
   if (user.role == "") unauthorized();
 
   if (user.role == "monitor") forbidden();
-  type FormattedDateString = `${number}年${number}月${number}日 (${string})`;
+  
+  type FormattedDateString = `中華民國${number}年${number}月${number}日 (${string})`;
 
-  function getFormattedDate(date: Date = new Date()): FormattedDateString {
+  function getFormattedDate(): FormattedDateString {
+    const date = new Date()
     const days = ['日', '一', '二', '三', '四', '五', '六'] as const;
     
-    const year = date.getFullYear();
+    const year = date.getFullYear() - 1911;
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const dayName = days[date.getDay()];
 
-    return `${year}年${month}月${day}日 (${dayName})`;
+    return `中華民國${year}年${month}月${day}日 (${dayName})`;
   }
 
   return (
@@ -33,7 +33,7 @@ export default async function Header() {
       <div className="flex items-center gap-space-xs md:gap-space-md">
         <SidebarToggleButton />
         <span className="font-md text-md text-on-surface font-medium">
-            {getFormattedDate(today)}
+            {getFormattedDate()}
         </span>
       </div>
 

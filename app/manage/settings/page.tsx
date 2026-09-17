@@ -7,15 +7,11 @@ export default function SettingsPage() {
   const [endTime, setEndTime] = useState("14:30");
   const [autoLateApproval, setAutoLateApproval] = useState(true);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col w-full gap-space-lg">
 
 
-      {/* Page Title */}
+      {/* Page Title
       <div className="flex items-center justify-between pb-space-xs border-b border-outline-variant/40">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm tracking-wider uppercase">
@@ -30,11 +26,11 @@ export default function SettingsPage() {
             生輔組全域規則控管 · 出缺席作業時段 · 帳號權限及資料調度歸檔
           </p>
         </div>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-12 gap-space-lg items-start">
         {/* Settings Navigation Sidebar */}
-        <div className="col-span-12 lg:col-span-3 flex flex-col gap-space-sm sticky top-20">
+        {/* <div className="col-span-12 lg:col-span-3 flex flex-col gap-space-sm sticky top-20">
           <div className="bg-surface-container-low p-space-sm rounded-xl flex flex-col gap-1 shadow-sm border border-outline-variant/40">
             <a
               href="#section-reporting"
@@ -98,10 +94,10 @@ export default function SettingsPage() {
               <span className="font-numeric-data">10/12 09:14</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Settings Main Content Form */}
-        <form onSubmit={handleSave} className="col-span-12 lg:col-span-9 flex flex-col gap-space-xl">
+        <form className="col-span-12 lg:col-span-9 flex flex-col gap-space-xl">
           {/* Section 1: Reporting Window */}
           <section
             id="section-reporting"
@@ -132,9 +128,9 @@ export default function SettingsPage() {
                   <span>回報開始時間</span>
                 </label>
                 <input
-                  type="text"
+                  type="time"
                   value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
+                  onChange={(e) => console.log(e.target.value)}
                   className="w-full bg-surface-container-lowest text-primary font-numeric-data text-headline-sm px-space-md py-space-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container border border-outline-variant/40 mt-1"
                 />
               </div>
