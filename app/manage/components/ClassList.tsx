@@ -59,7 +59,7 @@ export function ClassTable({
                     </h2>
                 </div>
                 {/* Grade Filter Segmented Control */}
-                <div className="flex p-1 rounded-xl w-full md:w-auto overflow-x-auto bg-surface-container-high self-start md:self-auto shadow-sm">
+                <div className="flex p-1 rounded-xl w-full md:w-auto justify-between overflow-x-auto bg-surface-container-high self-start md:self-auto shadow-sm">
                     {yearOptions.map((option) => (
                         <button
                             key={option.key}
@@ -86,16 +86,16 @@ export function ClassTable({
                 <table className="w-full text-left border-collapse">
                     <thead>
                     <tr className="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase border-b border-outline-variant">
-                        <th className="py-3 w-[5%] px-space-lg">班級名稱</th>
-                        <th className="py-3 w-[15%] px-space-md">回報狀態</th>
-                        <th className="py-3 w-[30%] px-space-md">缺席人數</th>
-                        <th className="py-3 w-[15%] px-space-md">送出時間 / 人員</th>
+                        <th className="py-3 px-space-lg">班級名稱</th>
+                        <th className="py-3 px-space-md">回報狀態</th>
+                        <th className="py-3 px-space-md">缺席人數</th>
+                        <th className="py-3 px-space-md">送出時間 / 人員</th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/40 font-body-md text-body-md">
                     {filteredClasses.map((report) => (
                         <tr
-                            key={report.id}
+                            key={report.class}
                             onClick={() => router.push(`/manage/class/${report.class}`)}
                             className="hover:bg-surface-container/50 transition-colors"
                         >

@@ -6,23 +6,14 @@ export default function SettingsPage() {
   const [startTime, setStartTime] = useState("13:30");
   const [endTime, setEndTime] = useState("14:30");
   const [autoLateApproval, setAutoLateApproval] = useState(true);
-  const [savedToast, setSavedToast] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    setSavedToast(true);
-    setTimeout(() => setSavedToast(false), 3000);
   };
 
   return (
     <div className="flex flex-col w-full gap-space-lg">
-      {/* Toast Notification */}
-      {savedToast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-tertiary-fixed text-on-tertiary-fixed border border-tertiary-container/30 px-5 py-3 rounded-lg shadow-xl font-label-md flex items-center gap-2 animate-bounce">
-          <span className="material-symbols-outlined text-base">check_circle</span>
-          系統設定已成功儲存並同步至全校伺服器！
-        </div>
-      )}
+
 
       {/* Page Title */}
       <div className="flex items-center justify-between pb-space-xs border-b border-outline-variant/40">

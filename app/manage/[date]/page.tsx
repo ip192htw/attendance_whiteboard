@@ -19,8 +19,6 @@ export default async function DashboardPage({ params }: {params: Promise<{date: 
 
     if (!config) return;
 
-    console.log(reports.length)
-
     
 
     const reportsMap = new Map(reports.map((report) => [report.class, report]))
