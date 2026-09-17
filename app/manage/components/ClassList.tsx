@@ -38,72 +38,11 @@ export function ClassTable({
     ]
     const [selectedGrade, setSelectedGrade] = useState<string>("全部");
 
-    const reportsMap = new Map(reports.map((report) => [report.class, report]))
-        
     
-    
-    
-
-    const yearBaseClass =
-        config.baseClass +
-        (new Date().getFullYear() - 
-        config.baseYear - 1) * 
-        config.classesPerGrade;
-
-    function getGrade(
-        classNo: number,
-    ) {
-
-        const offset =
-            classNo - yearBaseClass;
-
-        if (
-            offset < 0 ||
-            offset >= config.classesPerGrade * 3
-        ) {
-            return 0;
-        }
-
-        return 3 - Math.floor(offset / config.classesPerGrade);
-    }
-
-    const allClass =  Array.from({ length: 3 * config.classesPerGrade }, (_, i) => {
-        return String(yearBaseClass + i)
-    });
-
-    const fullReport: ReportItem[] = allClass.map((classNo) => {
-        const report = reportsMap.get(classNo)
-
-        if (report) {
-            return {
-                ...report,
-                grade: getGrade(+report.class)
-            }
-        }
-
-        return {
-            id: "",
-            class: classNo,
-            grade: getGrade(+classNo),
-
-            sick: 0,
-            personal: 0,
-            official: 0,
-            other: 0,
-
-            absentCount: 0,
-
-            status: "pending",
-            report_date: "Not available",
-            submitted_by: "Not available",
-            submitted_at: "Not available"
-
-        }
-    })
 
     
 
-    const filteredClasses = fullReport.filter((report) => {
+    const filteredClasses = reports.filter((report) => {
         if (selectedGrade === "全部") return true;
         return report.grade === parseInt(yearOptions.find((o) => o.value === selectedGrade)?.key!);
     });
@@ -182,9 +121,11 @@ export function ClassTable({
                             {report.other > 0 && (<span className="text-red-600 font-bold">曠 {report.other} </span>)}
                             {report.absentCount > 0 && (<span className="text-on-surface-variant font-bold">共 {report.absentCount} 人</span>)}
                             {report.absentCount === 0 && (<span className="text-green-400 font-bold">全員到齊</span>)}
+                            {report.absentCount === -1 && (<span className="text-outline italic">尚未填報</span>)}
+
                         </td>
                         <td className="py-3.5 px-space-md text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap">
-                            {report.submitted_at ? (
+                            {report.submitted_at !== "" ? (
                             <span>
                                 <span className="font-numeric-data text-on-surface font-medium mr-1">
                                     {new Date(report.submitted_at).toLocaleTimeString("zh-TW")}

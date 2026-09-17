@@ -45,15 +45,13 @@ class DefaultReportService
     ) {}
 
     async getReportsByDate(date: Date): Promise<ReportItem[]> {
-
-        const reports = await this.repository.getByDate(date.toLocaleDateString('en-CA'));
-
-        
+        const reports = await this.repository.getByDate(
+            date.toLocaleDateString("en-CA")
+        );
 
         const reportMap = new Map<string, Report>();
 
-        reports.forEach(report => {
-            
+        reports.forEach((report) => {
             const existingReport = reportMap.get(report.class);
 
             if (!existingReport) {
@@ -61,33 +59,33 @@ class DefaultReportService
                 return;
             }
 
-           if (existingReport.submitted_at < report.submitted_at) {
+            if (existingReport.submitted_at < report.submitted_at) {
                 reportMap.set(report.class, report);
-           }
-
+            }
         });
-        
-        reports.sort((a, b) => +a.class - +b.class);
 
-        return reports.map(report => ({
+        const latestReports = Array.from(reportMap.values());
+
+        latestReports.sort((a, b) => +a.class - +b.class);
+
+        return latestReports.map((report) => ({
             id: report.id,
             class: report.class,
-            grade: 0, // Placeholder, will be calculated later
+            grade: 0,
 
             sick: report.payload.sick?.length ?? 0,
             personal: report.payload.personal?.length ?? 0,
             official: report.payload.official?.length ?? 0,
             other: report.payload.other?.length ?? 0,
 
-            absentCount: Object.values(report.payload).reduce((acc, arr) => acc + arr.length, 0),
+            absentCount: Object.values(report.payload)
+                .reduce((acc, arr) => acc + arr.length, 0),
 
-            status:  "reported",
+            status: "reported",
             report_date: report.report_date,
             submitted_by: report.submitted_by,
             submitted_at: report.submitted_at,
         }));
-
-
     }
 
     async submitReport(payload: Record<string, number[]>): Promise<void> {

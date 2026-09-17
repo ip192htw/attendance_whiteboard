@@ -1,16 +1,20 @@
+import { Metrics, ClassTable, MetricsData } from "../components"
 
+import { notFound } from "next/navigation";
 
-
-import { Metrics, ClassTable, MetricsData } from "./components"
-
-import { getClassNumberingConfig, getReportsByDate } from "../actions";
+import { getClassNumberingConfig, getReportsByDate } from "../../actions";
 
 import { ReportItem } from "@/src/domain/attendance";
 
-export default async function DashboardPage() {
+
+export default async function DashboardPage({ params }: {params: Promise<{date: string;}>;}) {
+    const { date } = await params
+
+    if (isNaN(new Date(date).getTime())) return notFound();
+
     const [config, reports] = await Promise.all([
         getClassNumberingConfig(),
-        getReportsByDate(new Date())
+        getReportsByDate(new Date(date))
     ])
 
     if (!config) return;
