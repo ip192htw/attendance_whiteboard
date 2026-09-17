@@ -25,8 +25,6 @@ export default async function DailyReportPage() {
       message?: string;
   };
 
-console.log(reportConfig)
-
   function checkReportAvailability(): ReportAvailability {
     const now = new Date()
     const date = now.toLocaleDateString('en-CA')

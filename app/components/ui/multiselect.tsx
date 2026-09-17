@@ -47,7 +47,7 @@ export function RadixMultiSelect({
     <Popover.Root open={open} onOpenChange={setOpen}>
       {/* 下拉選單開關觸發器 */}
       <Popover.Trigger asChild>
-        <button className={cn("flex min-h-[40px] items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500", className)}>
+        <button className={cn("flex min-h-10 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500", className)}>
           <div className="flex flex-wrap gap-1 items-center">
             {selected.length > 0 ? (
               selected.map((val) => {
@@ -76,7 +76,7 @@ export function RadixMultiSelect({
       {/* 下拉彈出視窗 */}
       <Popover.Portal>
         <Popover.Content
-          className="z-50 w-[var(--radix-popover-trigger-width)] rounded-md border border-gray-200 bg-white p-1 shadow-lg animate-in fade-in-80"
+          className="z-50 w-(--radix-popover-trigger-width) rounded-md border border-gray-200 bg-white p-1 shadow-lg animate-in fade-in-80"
           sideOffset={5}
         >
           <div className="max-h-60 overflow-y-auto space-y-1">

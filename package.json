@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:reports": "tsx scripts/seed-reports.ts"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.11",
@@ -27,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }

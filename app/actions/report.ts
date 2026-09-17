@@ -6,6 +6,14 @@ import { createContainer } from '@/src/container';
 import { ReportSubmissionError } from '@/src/domain/attendance';
 
 
+export async function getReportsByDate(date: Date = new Date()){
+    const container = await createContainer();
+    return container.reportService.getReportsByDate(date);
+}
+
+
+
+
 export type SubmitReportState =
     | {
         success: true;

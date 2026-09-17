@@ -15,8 +15,8 @@ import {
 } from '../domain/auth/serivce/Session';
 
 import {
-    SettingsService,
-    createSettingsService
+    SystemService,
+    createSystemService
 } from "../domain/system";
 
 import {
@@ -39,7 +39,7 @@ export interface Container {
 
     sessionService: SessionService;
 
-    settingsService: SettingsService;
+    settingsService: SystemService;
 
     reportService: ReportService;
 
@@ -62,7 +62,7 @@ export const createContainer = cache(async (): Promise<Container> => {
 
     const sessionService = createSessionService(sessionProvider, userProvider, profileRepository);
 
-    const settingsService = createSettingsService(settingsRepository);
+    const settingsService = createSystemService(settingsRepository);
 
     const reportService = createReportService(reportRepository);
 

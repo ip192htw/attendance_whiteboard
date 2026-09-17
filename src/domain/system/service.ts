@@ -2,7 +2,7 @@ import { SettingsRepository } from "./repository";
 import { Setting } from "./types";
 
 
-export interface ReportConfig {
+export type ReportConfig = {
 
     report_start_time: string;
 
@@ -16,10 +16,19 @@ export interface ReportConfig {
 
 }
 
-export interface SettingsService {
+
+export  type ClassNumberingConfig = {
+    baseYear: number;
+    baseClass: number;
+    classesPerGrade: number;
+};
+
+export interface SystemService {
     
     
     getReportConfig(): Promise<ReportConfig | null>;
+
+    getClassNumberingConfig(): Promise<ClassNumberingConfig | null>;
 
     setSettings(setting: Setting[]): Promise<void>;
 
@@ -27,8 +36,8 @@ export interface SettingsService {
 }
 
 
-class DefaultSewttingsService 
-implements SettingsService {
+class DefaultSystemsService 
+implements SystemService {
 
     constructor(
         private readonly settingsRepository: SettingsRepository,
@@ -62,13 +71,38 @@ implements SettingsService {
         return config;
     }
 
+    async getClassNumberingConfig(): Promise<ClassNumberingConfig | null> {
+        const keys = [
+            "base_year",
+            "base_class",
+            "classes_per_grade",
+        ];
+
+        const settings = await this.settingsRepository.getMany(keys);
+
+        if (settings.length === 0) {
+            return null;
+        }
+
+        const settingsMap = new Map(settings.map(s => [s.key, s.value]));
+
+
+        const config: ClassNumberingConfig = {
+            baseYear: parseInt(settingsMap.get("base_year") || "0", 10),
+            baseClass: parseInt(settingsMap.get("base_class") || "0", 10),
+            classesPerGrade: parseInt(settingsMap.get("classes_per_grade") || "0", 10),
+        };
+
+        return config;
+    }
+
     async setSettings(settings: Setting[]): Promise<void> {
         await this.settingsRepository.setMany(settings);
     }
 }
 
-export function createSettingsService(
+export function createSystemService(
     settingsRepository: SettingsRepository
-): SettingsService {
-    return new DefaultSewttingsService(settingsRepository);
+): SystemService {
+    return new DefaultSystemsService(settingsRepository);
 }

@@ -112,8 +112,8 @@ GRANT EXECUTE
 ON FUNCTION attendance.submit_report(...)
 TO authenticated;
 
-ALTER TABLE system.settings ENABLE ROW LEVEL SECURITY;
 GRANT USAGE ON SCHEMA system TO authenticated;
+ALTER TABLE system.settings ENABLE ROW LEVEL SECURITY;
 GRANT SELECT ON system.settings TO authenticated;
 
 CREATE POLICY "settings_select"
@@ -126,7 +126,7 @@ USING (
         FROM identity.users
         WHERE auth_user_id = auth.uid()
     )
-)
+);
 
 
 CREATE POLICY "settings_update"
@@ -135,4 +135,4 @@ FOR UPDATE
 TO authenticated
 USING (
     (identity.current_user()).role IN ('instructor', 'supervisor')
-)
+);
