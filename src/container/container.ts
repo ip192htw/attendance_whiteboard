@@ -5,11 +5,6 @@ import { cache } from 'react';
 import { createClient } from "@/utils/supabase/server";
 
 import {
-    Currentuser,
-    createCurrentUser
-} from '../domain/identity';
-
-import {
     SessionService,
     createSessionService
 } from '../domain/auth/serivce/Session';
@@ -35,8 +30,6 @@ import {
 
 export interface Container {
 
-    currentUser: Currentuser;
-
     sessionService: SessionService;
 
     settingsService: SystemService;
@@ -58,8 +51,6 @@ export const createContainer = cache(async (): Promise<Container> => {
     const userProvider = new SupabaseUserProvider(supabase);
     const sessionProvider = new SupabaseSessionProvider(supabase);
 
-    const currentUser = createCurrentUser(profileRepository, userProvider);
-
     const sessionService = createSessionService(sessionProvider, userProvider, profileRepository);
 
     const settingsService = createSystemService(settingsRepository);
@@ -67,7 +58,6 @@ export const createContainer = cache(async (): Promise<Container> => {
     const reportService = createReportService(reportRepository);
 
     return {
-        currentUser,
         sessionService,
         settingsService,
         reportService

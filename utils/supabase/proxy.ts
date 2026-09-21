@@ -4,24 +4,20 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(
     request: NextRequest,
 ): Promise<NextResponse> {
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
-
     let response = NextResponse.next({
         request,
     });
 
     const supabase = createServerClient(
-        supabaseUrl,
-        supabaseAnonKey,
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
         {
             cookies: {
                 getAll() {
                     return request.cookies.getAll();
                 },
-                setAll(cookiesToSet) {
 
+                setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value }) => {
                         request.cookies.set(name, value);
                     });
@@ -44,16 +40,27 @@ export async function updateSession(
         },
     );
 
-    /*
-     * IMPORTANT
-     *
-     * Do not remove this call.
-     * It refreshes the session if necessary and writes
-     * updated cookies back through setAll().
-     */
-    await supabase.auth.getSession();
+    // Do not run code between createServerClient and
+    // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+    // issues with users being randomly logged out.
+    // IMPORTANT: If you remove getClaims() and you use server-side rendering
+    // with the Supabase client, your users may be randomly logged out.
 
-    
+    const { data, error } = await supabase.auth.getClaims();
+
+    const { pathname } = request.nextUrl;
+
+    const user = data?.claims;
+
+    const isProtected =
+        pathname === "/" ||
+        pathname.startsWith("/manage");
+
+    if (isProtected && !user) {
+        return NextResponse.redirect(
+            new URL("/login", request.url),
+        );
+    }
 
     return response;
 }

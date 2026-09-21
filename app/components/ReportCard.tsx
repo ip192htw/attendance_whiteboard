@@ -4,7 +4,7 @@ import { RadixMultiSelect } from "./ui";
 import { useState, useActionState, useEffect } from "react";
 
 
-import { submitReport } from "@/app/actions/report"
+import { submitReport } from "@/app/actions"
 
 export function ReportCard({cooldown_seconds} : { cooldown_seconds: string}) {
 

@@ -1,18 +1,16 @@
-import { redirect, forbidden, unauthorized } from "next/navigation";
+import { redirect } from "next/navigation";
 
-import { getCurrentUser } from "../actions";
+import { requireUser } from "@/src/dal/auth";
 
 import { SidebarToggleButton } from "./SidebarToggleButton";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Header() {
 
-  const user = await getCurrentUser()
+  const user = await requireUser()
 
   if (!!!user) redirect("/login");
-
-  if (user.role == "") unauthorized();
-
-  if (user.role == "monitor") forbidden();
   
   type FormattedDateString = `中華民國${number}年${number}月${number}日 (${string})`;
 

@@ -3,12 +3,48 @@
 
 import { createContainer } from '@/src/container';
 
-import { ReportSubmissionError } from '@/src/domain/attendance';
+import { ReportSubmissionError, ReportItem } from '@/src/domain/attendance';
 
+import { requireUser } from '@/src/dal/auth';
 
-export async function getReportsByDate(date: Date = new Date()){
-    const container = await createContainer();
-    return container.reportService.getReportsByDate(date);
+import { UnauthorizedError, ForbiddenError } from "@/src/dal/errors";
+
+export type ReportResponse =
+    | {
+        data: ReportItem[];
+        error: null;
+      }
+    | {
+        data: null;
+        error: string;
+      };
+
+export async function getReportsByDate(date: Date = new Date()): Promise<ReportResponse> {
+    try {
+        await requireUser();
+        const container = await createContainer();
+        const data = await container.reportService.getReportsByDate(date);
+        return {
+            data,
+            error: null,
+        };
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            return {
+                data: null,
+                error: "UNAUTHORIZED",
+            };
+        }
+
+        if (error instanceof ForbiddenError) {
+            return {
+                data: null,
+                error: "FORBIDDEN",
+            };
+        }
+
+        throw error;
+    }
 }
 
 
@@ -27,7 +63,11 @@ export type SubmitReportState =
 export async function submitReport(
     payload: Record<string, number[]>
 ): Promise<SubmitReportState> {
+
+    
     try {
+
+        await requireUser();
         const container = await createContainer();
 
         await container.reportService.submitReport(payload);
@@ -36,6 +76,20 @@ export async function submitReport(
             success: true,
         };
     } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            return {
+                success: false,
+                error: "UNAUTHORIZED",
+            };
+        }
+
+        if (error instanceof ForbiddenError) {
+            return {
+                success: false,
+                error: "FORBIDDEN",
+            };
+        }
+
         if (error instanceof ReportSubmissionError) {
             return {
                 success: false,

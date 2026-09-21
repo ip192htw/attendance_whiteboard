@@ -115,6 +115,8 @@ TO authenticated;
 GRANT USAGE ON SCHEMA system TO authenticated;
 ALTER TABLE system.settings ENABLE ROW LEVEL SECURITY;
 GRANT SELECT ON system.settings TO authenticated;
+GRANT INSERT ON system.settings TO authenticated;
+GRANT UPDATE ON system.settings TO authenticated;
 
 CREATE POLICY "settings_select"
 ON system.settings
@@ -128,6 +130,14 @@ USING (
     )
 );
 
+CREATE POLICY "settings_insert"
+ON system.settings
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    (identity.current_user()).role IN ('instructor', 'supervisor')
+);
+
 
 CREATE POLICY "settings_update"
 ON system.settings
@@ -136,3 +146,24 @@ TO authenticated
 USING (
     (identity.current_user()).role IN ('instructor', 'supervisor')
 );
+
+CREATE OR REPLACE FUNCTION system.set_setting_metadata()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.updated_at := now();
+    NEW.updated_by := (identity.current_user()).name;
+
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS set_setting_metadata
+ON system.settings;
+
+CREATE TRIGGER set_setting_metadata
+BEFORE INSERT OR UPDATE
+ON system.settings
+FOR EACH ROW
+EXECUTE FUNCTION system.set_setting_metadata();

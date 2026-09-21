@@ -1,3 +1,4 @@
+"use server";
 import { createContainer } from '@/src/container';
 
 export async function exchangeCodeForSession(code: string) {

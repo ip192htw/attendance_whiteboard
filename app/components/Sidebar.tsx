@@ -13,7 +13,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: "首頁", href: "/manage", icon: "home", exact: true },
-  { name: "人員管理", href: "/manage/settings#section-personnel", icon: "manage_accounts" },
   { name: "系統設定", href: "/manage/settings", icon: "settings" },
 ];
 

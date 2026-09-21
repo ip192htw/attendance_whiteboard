@@ -6,13 +6,11 @@ import { use, useState } from "react";
 import { useRouter } from 'next/navigation';
 
 
-import { ReportItem } from "@/src/domain/attendance";
-import { ClassNumberingConfig } from "@/src/domain/system"
+import { ReportItem } from "@/src/domain/attendance"
 
 
 interface ClassTableProps {
   reports: ReportItem[];
-  config: ClassNumberingConfig
 }
 
 interface YearOption {
@@ -23,8 +21,7 @@ interface YearOption {
 
 
 export function ClassTable({
-    reports,
-    config
+    reports
 } : ClassTableProps) {
 
     const router = useRouter()

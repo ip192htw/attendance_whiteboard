@@ -10,24 +10,39 @@ import { ReportItem } from "@/src/domain/attendance";
 export default async function DashboardPage({ params }: {params: Promise<{date: string;}>;}) {
     const { date } = await params
 
-    if (isNaN(new Date(date).getTime())) return notFound();
+    const today = new Date(date)
+
+    if (isNaN(today.getTime())) return notFound();
 
     const [config, reports] = await Promise.all([
         getClassNumberingConfig(),
         getReportsByDate(new Date(date))
     ])
 
-    if (!config) return;
+    if (!config.data) return;
 
-    
+    let data: MetricsData = {
+        classcount: config.data.classesPerGrade * 3,
+        reportedClass: 0,
 
-    const reportsMap = new Map(reports.map((report) => [report.class, report]))
+        notReportedGrade1: [],
+        notReportedGrade2: [],
+        notReportedGrade3: [],
+
+        sick: 0,
+        personal: 0,
+        official: 0,
+        other: 0,
+        all: 0
+    }
+
+    const reportsMap = new Map(reports.data!.map((report) => [report.class, report]))
         
     const yearBaseClass =
-        config.baseClass +
+        config.data.baseClass +
         (new Date().getFullYear() - 
-        config.baseYear - 1) * 
-        config.classesPerGrade;
+        config.data.baseYear - 1) * 
+        config.data.classesPerGrade;
 
     function getGrade(
         classNo: number,
@@ -43,27 +58,12 @@ export default async function DashboardPage({ params }: {params: Promise<{date: 
             return 0;
         }
 
-        return 3 - Math.floor(offset / config!.classesPerGrade);
+        return 3 - Math.floor(offset / config.data!.classesPerGrade);
     }
 
-    const allClass =  Array.from({ length: 3 * config.classesPerGrade }, (_, i) => {
+    const allClass =  Array.from({ length: 3 * config.data.classesPerGrade }, (_, i) => {
         return String(yearBaseClass + i)
     });
-
-    let data: MetricsData = {
-        classcount: config!.classesPerGrade * 3,
-        reportedClass: 0,
-
-        notReportedGrade1: [],
-        notReportedGrade2: [],
-        notReportedGrade3: [],
-
-        sick: 0,
-        personal: 0,
-        official: 0,
-        other: 0,
-        all: 0
-    }
 
     const fullReport: ReportItem[] = allClass.map((classNo) => {
         const report = reportsMap.get(classNo)
@@ -115,12 +115,22 @@ export default async function DashboardPage({ params }: {params: Promise<{date: 
         }
     })
 
+    function getFormattedDate(date: Date): string {
+        const days = ['日', '一', '二', '三', '四', '五', '六'] as const;
+        
+        const year = date.getFullYear() - 1911;
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const dayName = days[date.getDay()];
+
+        return `${year}年${month}月${day}日 (${dayName})`;
+    }
 
   return (
     <div className="flex flex-col gap-space-lg w-full">
       <div className="flex flex-col">
           <h1 className="font-display text-4xl text-primary tracking-tight font-bold">
-            今日全校回報概況
+            {getFormattedDate(today)} 全校回報概況
           </h1>
         </div>
 
@@ -128,7 +138,7 @@ export default async function DashboardPage({ params }: {params: Promise<{date: 
       <Metrics data={data} />
 
       {/* Class List Table */}
-      <ClassTable reports={fullReport}  config={config}/>
+      <ClassTable reports={fullReport} />
 
     
     </div>

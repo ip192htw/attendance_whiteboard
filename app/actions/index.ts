@@ -1,4 +1,3 @@
 export { exchangeCodeForSession } from './session';
-export { getReportConfig, getClassNumberingConfig } from './settings';
-export { getCurrentUser } from './user';
+export { getReportConfig, getClassNumberingConfig, getSettings, setSettings} from './settings';
 export { submitReport, getReportsByDate } from './report';

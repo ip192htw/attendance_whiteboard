@@ -17,10 +17,15 @@ export type ReportConfig = {
 }
 
 
-export  type ClassNumberingConfig = {
+export type ClassNumberingConfig = {
     baseYear: number;
     baseClass: number;
     classesPerGrade: number;
+};
+
+export type SystemConfig = {
+    report: ReportConfig;
+    classNumbering: ClassNumberingConfig;
 };
 
 export interface SystemService {
@@ -30,7 +35,9 @@ export interface SystemService {
 
     getClassNumberingConfig(): Promise<ClassNumberingConfig | null>;
 
-    setSettings(setting: Setting[]): Promise<void>;
+    getSettings(): Promise<SystemConfig>;
+
+    setSettings(setting: SystemConfig): Promise<void>;
 
 
 }
@@ -96,8 +103,60 @@ implements SystemService {
         return config;
     }
 
-    async setSettings(settings: Setting[]): Promise<void> {
-        await this.settingsRepository.setMany(settings);
+    private buildSystemConfig(
+        settings: Setting[]
+    ): SystemConfig {
+        const map = new Map(
+            settings.map(setting => [
+                setting.key,
+                setting.value
+            ])
+        );
+
+        return {
+            report: {
+                report_start_time:
+                    map.get("report_start_time")!,
+                report_end_time:
+                    map.get("report_end_time")!,
+                report_cooldown_seconds:
+                    map.get("report_cooldown_seconds")!,
+
+                semester_start:
+                    map.get("semester_start_date")!,
+                semester_end:
+                    map.get("semester_end_date")!,
+            },
+
+            classNumbering: {
+                baseYear:
+                    Number(map.get("base_year")),
+                baseClass:
+                    Number(map.get("base_class")),
+                classesPerGrade:
+                    Number(map.get("class_per_grade")),
+            }
+        };
+    }
+
+    async getSettings(): Promise<SystemConfig> {
+        const settings = await this.settingsRepository.getAll();
+
+        return this.buildSystemConfig(settings);
+    }
+
+    async setSettings(settings: SystemConfig): Promise<void> {
+        const settingsToSave: Setting[] = [
+            { key: "report_start_time", value: settings.report.report_start_time },
+            { key: "report_end_time", value: settings.report.report_end_time },
+            { key: "report_cooldown_seconds", value: settings.report.report_cooldown_seconds },
+            { key: "semester_start_date", value: settings.report.semester_start },
+            { key: "semester_end_date", value: settings.report.semester_end },
+            { key: "base_year", value: settings.classNumbering.baseYear.toString() },
+            { key: "base_class", value: settings.classNumbering.baseClass.toString() },
+            { key: "classes_per_grade", value: settings.classNumbering.classesPerGrade.toString() },
+        ];
+        await this.settingsRepository.setMany(settingsToSave);
     }
 }
 

@@ -1,24 +1,24 @@
-import { redirect, unauthorized } from "next/navigation";
+import { redirect } from "next/navigation";
 
-import { getCurrentUser, getReportConfig } from "./actions";
+import { getReportConfig } from "./actions";
 
-import { ReportConfig } from "@/src/domain/system/service";
+import { requireUser } from "@/src/dal/auth";
 
 import { SignOutButton } from "./components/ui";
 
 import { ReportCard } from "./components/ReportCard";
 
+import { ReportConfig } from "@/src/domain/system"
+
 export default async function DailyReportPage() {
 
-  const user = await getCurrentUser()
+  const user = await requireUser()
 
   if (!!!user) redirect("/login");
 
-  if (user.role == "") unauthorized();
+  const config = await getReportConfig()
 
-  if (user.role !== "monitor") redirect("/manage");
-
-  const reportConfig = await getReportConfig()
+  if (!config.data || config.error) return;
 
   type ReportAvailability = {
       allowed: boolean;
@@ -29,16 +29,16 @@ export default async function DailyReportPage() {
     const now = new Date()
     const date = now.toLocaleDateString('en-CA')
 
-    if (!reportConfig) return {allowed: false};
+    if (!config) return { allowed: false };
 
-    if (date < reportConfig.semester_start) {
+    if (date < config.data!.semester_start) {
       return {
         allowed: false,
         message: `本學期尚未開始`,
       };
     }
 
-    if (date > reportConfig.semester_end) {
+    if (date > config.data!.semester_end) {
       return {
         allowed: false,
         message: `本學期已結束`,
@@ -56,14 +56,14 @@ export default async function DailyReportPage() {
 
     const time = now.toTimeString().split(' ')[0]
 
-    if (time < reportConfig.report_start_time) {
+    if (time < config.data!.report_start_time) {
         return {
             allowed: false,
             message: "今日回報尚未開始",
         };
     }
 
-    if (time > reportConfig.report_end_time) {
+    if (time > config.data!.report_end_time) {
         return {
             allowed: false,
             message: "今日回報時間已結束",
@@ -107,7 +107,7 @@ export default async function DailyReportPage() {
               {allow.message}
             </h1>)}
             
-            {allow.allowed && (<ReportCard cooldown_seconds={reportConfig?.report_cooldown_seconds!} />)}
+            {allow.allowed && (<ReportCard cooldown_seconds={config.data.report_cooldown_seconds} />)}
             
             <div className="flex justify-center">
               <SignOutButton />
