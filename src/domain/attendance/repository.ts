@@ -1,4 +1,4 @@
-import { Report, ReportQuery, ReportList } from "./types";
+import { Report, GetClassHistoryQuery, ClassHistoryResult } from "./types";
 
 export interface ReportRepository {
 
@@ -9,7 +9,9 @@ export interface ReportRepository {
 
     getByDate(date: string): Promise<Report[]>;
 
-    find(query: ReportQuery): Promise<ReportList>;
+    getClassHistory(
+        query: GetClassHistoryQuery,
+    ): Promise<ClassHistoryResult>
 
     submit(payload: Record<string, number[]>): Promise<void>;
 

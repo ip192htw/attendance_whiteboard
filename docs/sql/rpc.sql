@@ -609,3 +609,48 @@ FROM anon;
 GRANT EXECUTE
 ON FUNCTION attendance.correct_report(INTEGER, DATE, JSONB)
 TO authenticated;
+
+
+CREATE OR REPLACE FUNCTION attendance.get_class_history(
+    p_class TEXT,
+    p_before DATE DEFAULT NULL,
+    p_limit INTEGER DEFAULT 20
+)
+RETURNS SETOF attendance.reports
+LANGUAGE SQL
+STABLE
+SECURITY INVOKER
+SET search_path = attendance
+AS $$
+    SELECT DISTINCT ON (r.report_date)
+        r.*
+    FROM attendance.reports AS r
+    WHERE r.class = p_class
+      AND r.report_date < COALESCE(
+          p_before,
+          (now() AT TIME ZONE 'Asia/Taipei')::date
+      )
+    ORDER BY
+        r.report_date DESC,
+        r.submitted_at DESC,
+        r.id DESC
+    LIMIT p_limit;
+$$;
+
+/*
+ * -------------------------------------------------------------
+ * Permissions
+ * -------------------------------------------------------------
+ */
+
+REVOKE ALL
+ON FUNCTION attendance.get_class_history(TEXT, DATE, INTEGER)
+FROM PUBLIC;
+
+REVOKE ALL
+ON FUNCTION attendance.get_class_history(TEXT, DATE, INTEGER)
+FROM anon;
+
+GRANT EXECUTE
+ON FUNCTION attendance.get_class_history(TEXT, DATE, INTEGER)
+TO authenticated;

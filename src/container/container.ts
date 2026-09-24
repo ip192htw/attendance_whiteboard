@@ -4,6 +4,8 @@ import { cache } from 'react';
 
 import { createClient } from "@/utils/supabase/server";
 
+import { ProfileRepository } from '../domain/identity';
+
 import {
     SessionService,
     createSessionService
@@ -29,6 +31,8 @@ import {
 } from '../infra/supabase';
 
 export interface Container {
+
+    profileRepository: ProfileRepository;
 
     sessionService: SessionService;
 
@@ -58,6 +62,7 @@ export const createContainer = cache(async (): Promise<Container> => {
     const reportService = createReportService(reportRepository);
 
     return {
+        profileRepository,
         sessionService,
         settingsService,
         reportService

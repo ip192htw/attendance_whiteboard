@@ -1,13 +1,13 @@
-
-
 import Link from "next/link";
+
+import { ClassHistoryTable } from "./component/ClassHistoryTable"
 
 
 export default async function ClassDetailPage({ params }: {params: Promise<{name: string;}>;}) {
   const { name } = await params
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col max-w-5xl">
       {/* Breadcrumb & Document Stamp Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-md">
         <nav className="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
@@ -89,9 +89,10 @@ export default async function ClassDetailPage({ params }: {params: Promise<{name
             </h2>
           </div>
           <span className="font-label-sm text-label-sm text-on-surface-variant">
-            顯示 12 筆示範名冊
+            顯示 {`12`} 筆回報紀錄
           </span>
         </div>
+        <ClassHistoryTable classNo={name} />
       </div>
     </div>
   );

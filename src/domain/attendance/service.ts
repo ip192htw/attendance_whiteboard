@@ -1,6 +1,6 @@
 import { ReportRepository } from "./repository";
-import { Report } from "./types";
-
+import { Report, GetClassHistoryQuery, ClassHistoryResult } from "./types";
+import { ValidationError } from "./error"
 
 export interface ReportItem {
     id: string;
@@ -26,6 +26,10 @@ export type ReportState = "reported" | "pending";
 export interface ReportService {
 
     getReportsByDate(date: Date): Promise<ReportItem[]>;
+
+    getClassHistory(
+        query: GetClassHistoryQuery,
+    ): Promise<ClassHistoryResult>
 
     submitReport(payload: Record<string, number[]>): Promise<void>;
 
@@ -86,6 +90,33 @@ class DefaultReportService
             submitted_by: report.submitted_by,
             submitted_at: report.submitted_at,
         }));
+    }
+
+    async getClassHistory(
+        query: GetClassHistoryQuery,
+    ): Promise<ClassHistoryResult> {
+        if (+query.classNo! <= 0) {
+            throw new ValidationError("Invalid class number");
+        }
+
+        const limit = query.limit ?? 20;
+
+        if (limit <= 0 || limit > 50) {
+            throw new ValidationError("Invalid limit");
+        }
+
+        if (query.before) {
+            const date = new Date(query.before);
+
+            if (Number.isNaN(date.getTime())) {
+                throw new ValidationError("Invalid cursor");
+            }
+        }
+
+        return this.repository.getClassHistory({
+            ...query,
+            limit,
+        });
     }
 
     async submitReport(payload: Record<string, number[]>): Promise<void> {

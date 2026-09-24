@@ -8,13 +8,13 @@ import { SignOutButton } from "./components/ui";
 
 import { ReportCard } from "./components/ReportCard";
 
-import { ReportConfig } from "@/src/domain/system"
-
 export default async function DailyReportPage() {
 
   const user = await requireUser()
 
   if (!!!user) redirect("/login");
+
+  if (user.role) redirect('/manage');
 
   const config = await getReportConfig()
 

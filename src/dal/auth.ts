@@ -5,6 +5,8 @@ import { createClient } from "@/utils/supabase/server";
 import type { Role } from "@/src/domain/identity";
 import { UnauthorizedError, ForbiddenError } from "./errors";
 
+import { createContainer } from "../container";
+
 import { cache } from "react";
 
 
@@ -19,14 +21,11 @@ export const requireUser = cache(async function requireUser() {
         throw new UnauthorizedError();
     }
 
-    const { data: appUser, error } = await supabase
-        .schema("identity")
-        .from("users")
-        .select("*")
-        .eq("email", user.email)
-        .maybeSingle();
+    const container = await createContainer();
 
-    if (error || !appUser) {
+    const appUser = await container.profileRepository.getUserByEmail(user.email)
+
+    if (!appUser) {
         throw new ForbiddenError();
     }
 

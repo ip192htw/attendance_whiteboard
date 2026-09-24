@@ -16,3 +16,10 @@ export class ReportSubmissionError extends Error {
         this.name = "ReportSubmissionError";
     }
 }
+
+export class ValidationError extends Error {
+    constructor(message: string) {
+        super(message)
+        this.name = "ValidationError"
+    }
+}

@@ -14,36 +14,24 @@ export interface Report {
 }
 
 
-export interface ReportQuery {
+export interface GetClassHistoryQuery {
 
-    classes?: string[];
+    classNo?: string;
 
-    dateFrom?: string;
+    before?: string;
 
-    dateTo?: string;
-
-    sort?: ReportSort;
-
-    page: number;
-
-    pageSize: number;
+    limit?: number;
 }
-export type ReportSort =
-    | "class-asc"
-    | "class-desc"
-    | 'date-asc'
-    | 'date-desc'
-    | 'newest'
-    | 'oldest'
 
-export interface ReportList {
+
+
+
+export interface ClassHistoryResult {
 
     items: Report[];
 
-    total: number;
+    nextCursor: string;
 
-    page: number;
-
-    pageSize: number;
+    hasMore: boolean
 
 }

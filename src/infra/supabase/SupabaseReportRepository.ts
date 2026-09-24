@@ -2,7 +2,9 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 import {
     ReportRepository,
-    Report, ReportList, ReportQuery,
+    Report,
+    GetClassHistoryQuery,
+    ClassHistoryResult,
     ReportSubmissionErrorCode,
     ReportSubmissionError
 } from "../../domain/attendance";
@@ -71,8 +73,36 @@ export class SupabaseReportRepository
         return data as Report[];
     }
 
-    async find(query: ReportQuery): Promise<ReportList> {
-        throw new Error("Method not implemented.");
+
+    async getClassHistory(
+        query: GetClassHistoryQuery,
+    ): Promise<ClassHistoryResult> {
+        const limit = query.limit ?? 20;
+
+        const { data, error } = await this.client
+            .schema("attendance")
+            .rpc("get_class_history", {
+                p_class: query.classNo,
+                p_before: query.before ?? null,
+                p_limit: limit + 1,
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        const rows = data ?? [];
+
+        const hasMore = rows.length > limit;
+        const items = rows.slice(0, limit);
+
+        return {
+            items,
+            nextCursor: hasMore
+                ? items.at(-1)?.report_date ?? null
+                : null,
+            hasMore,
+        };
     }
 
     async submit(payload: Record<string, number[]>): Promise<void> {

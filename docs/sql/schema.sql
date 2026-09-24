@@ -48,8 +48,9 @@ CREATE TABLE attendance.reports (
 CREATE INDEX reports_class_date_submitted_idx
 ON attendance.reports (
     class,
-    report_date,
-    submitted_at DESC
+    report_date DESC,
+    submitted_at DESC,
+    id DESC
 );
 
 CREATE INDEX reports_date_class_submitted_idx

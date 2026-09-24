@@ -23,7 +23,7 @@ export default function Sidebar() {
       {/* Brand Header */}
       <div className="h-32 px-space-lg flex items-center gap-space-sm border-b border-outline-variant bg-surface-container-lowest">
         <img
-          src="../favicon.ico"
+          src="/logo.png"
           className="w-16 h-16 rounded-lg"
         />
         <div className="flex flex-col">
