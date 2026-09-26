@@ -5,6 +5,8 @@ export interface ProfileRepository {
 
     getUserByEmail(email: string): Promise<Profile | null>;
 
+    getUserByUid(uid: string): Promise<Profile | null>;
+
     getUsersByRole(role: Role): Promise<Profile[]>;
 
     getUsers(): Promise<Profile[]>;
@@ -21,7 +23,5 @@ export interface ProfileRepository {
 
     deleteMany(emails: string[]): Promise<void>;
 
-    deletebyRole(role: Role): Promise<void>;
+    deleteByRole(role: Role): Promise<void>;
 }
-
-

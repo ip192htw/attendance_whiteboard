@@ -81,6 +81,25 @@ export class SupabaseProfileRepository
         return data;
     }
 
+    async getUserByUid(
+        uid: string
+    ): Promise<Profile | null> {
+        const { data, error } = await this.from()
+            .select("*")
+            .eq("auth_user_id", uid)
+            .maybeSingle();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data) {
+            return null;
+        }
+
+        return data;
+    }
+
     async getUsersByRole(
         role: Role
     ): Promise<Profile[]> {
@@ -145,7 +164,7 @@ export class SupabaseProfileRepository
         }
     }
 
-    async update( profile: Profile): Promise<void> {
+    async update(profile: Profile): Promise<void> {
         const { error } = await this.from()
             .update(profile)
             .eq("email", profile.email);
@@ -154,7 +173,6 @@ export class SupabaseProfileRepository
             throw error;
         }
     }
-
     async delete(email: string): Promise<void> {
         const { error } = await this.from()
             .delete()
@@ -176,7 +194,7 @@ export class SupabaseProfileRepository
 
     }
 
-    async deletebyRole(role: Role): Promise<void> {
+    async deleteByRole(role: Role): Promise<void> {
         const { error } = await this.from()
             .delete()
             .eq("role", role);

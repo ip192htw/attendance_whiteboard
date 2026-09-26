@@ -3,10 +3,10 @@
  // Import the Google sign-in function
 import { signInWithGoogle } from "@/app/actions/auth";
 
-export function SignInWithGoogleButton() {
+export function SignInWithGoogleButton({ redirectUrl }: { redirectUrl: string }) {
     const handleGoogleLogin = async () => {
         try {
-            await signInWithGoogle(); // Call the sign-in function
+            await signInWithGoogle(redirectUrl); // Call the sign-in function
         } catch (error) {
             console.error('Google login failed:', error)  
             alert('登入失敗，請稍後再試')

@@ -2,9 +2,9 @@ import { SupabaseAuthenticationProvider } from "@/src/infra/supabase/SupabaseAut
 
 
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectUrl: string) {
     const authProvider = new SupabaseAuthenticationProvider();
-    await authProvider.signInWithGoogle();
+    await authProvider.signInWithGoogle(redirectUrl);
 }
 
 export async function signInWithGoogleIdToken(provider: string, token: string) {

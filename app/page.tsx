@@ -14,7 +14,7 @@ export default async function DailyReportPage() {
 
   if (!!!user) redirect("/login");
 
-  if (user.role) redirect('/manage');
+  if (user.role === "instructor" || user.role === "supervisor") redirect('/manage');
 
   const config = await getReportConfig()
 

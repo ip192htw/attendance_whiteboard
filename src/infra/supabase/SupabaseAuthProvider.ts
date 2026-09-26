@@ -11,8 +11,7 @@ export class SupabaseAuthenticationProvider
 
     private readonly supabase = createClient();
 
-
-    async signInWithGoogle(): Promise<void> {
+    async signInWithGoogle(redirectUrl: string = ""): Promise<void> {
 
         const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
@@ -25,7 +24,7 @@ export class SupabaseAuthenticationProvider
                 options: {
 
                     redirectTo:
-                        `${origin}/auth/callback`,
+                        `${origin}/auth/callback?redirect_to=${encodeURIComponent(redirectUrl)}`,
 
                 },
 

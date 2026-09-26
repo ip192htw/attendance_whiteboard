@@ -46,7 +46,7 @@ export async function updateSession(
     // IMPORTANT: If you remove getClaims() and you use server-side rendering
     // with the Supabase client, your users may be randomly logged out.
 
-    const { data, error } = await supabase.auth.getClaims();
+    const { data } = await supabase.auth.getClaims();
 
     const { pathname } = request.nextUrl;
 
@@ -58,7 +58,7 @@ export async function updateSession(
 
     if (isProtected && !user) {
         return NextResponse.redirect(
-            new URL("/login", request.url),
+            new URL("/login?redirect_to=" + request.nextUrl, request.url),
         );
     }
 

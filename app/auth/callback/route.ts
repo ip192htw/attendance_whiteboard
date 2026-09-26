@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   try {
     await exchangeCodeForSession(code);
-  } catch(error) {
+  } catch {
     return NextResponse.redirect(new URL("/login", origin));
   }
 

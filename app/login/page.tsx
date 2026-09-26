@@ -1,13 +1,36 @@
 import { SignInWithGoogleButton } from "./components";
 
+import { requireUser } from "@/src/dal/auth";
+
+
+import { redirect } from "next/navigation";
+
 export const metadata = {
     title: "登入 - 學務處學生缺曠回報",
     description: "登入學生缺曠記錄",
     
 };
 
+type PageProps = {
+  searchParams: Promise<{
+    redirect_to?: string;
+  }>
+}
 
-export default function LoginPage() {
+export default async function LoginPage({ searchParams }: PageProps) {
+
+  const { redirect_to } = await searchParams;
+
+  try {
+    const user = await requireUser();
+
+    if (user.role === "instructor" || user.role === "supervisor") {
+      redirect("/manage");
+    } else {
+      redirect("/");
+    }
+  } catch {}
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface font-body-md text-on-surface antialiased">
@@ -36,7 +59,7 @@ export default function LoginPage() {
             </div>
             
             <div className="mt-8 space-y-4">
-              <SignInWithGoogleButton />
+              <SignInWithGoogleButton redirectUrl={redirect_to || "/"} />
               
             </div>
 

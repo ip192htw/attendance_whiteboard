@@ -1,6 +1,6 @@
 export interface AuthenticationProvider {
 
-    signInWithGoogle(): Promise<void>;
+    signInWithGoogle(redirectUrl: string): Promise<void>;
 
     signInWithGoogleIdToken(
         provider: string,
