@@ -23,7 +23,6 @@ const WEEKDAY_NAME = {
 } as const;
 
 function now(): Date {
-    // eslint-disable-next-line no-restricted-syntax
     return new Date();
 }
 

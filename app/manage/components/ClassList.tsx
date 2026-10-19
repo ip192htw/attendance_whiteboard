@@ -31,6 +31,7 @@ export function ClassTable({
         { value: "高二", key: "2"},
         { value: "高三", key: "3"},
     ]
+    
     const [selectedGrade, setSelectedGrade] = useState<string>("全部");
 
     

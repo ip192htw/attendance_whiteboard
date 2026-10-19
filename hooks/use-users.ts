@@ -115,6 +115,12 @@ export function useUsers(query: UsersQuery) {
         async function executeFetch() {
             setIsLoading(true);
             setError(null);
+            setData({
+                items: [],
+                total: 0,
+                page: 0,
+                pageSize: 0
+            });
 
             try {
                 const params = new URLSearchParams();

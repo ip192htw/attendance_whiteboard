@@ -93,6 +93,7 @@ export function parseProfileCsv(csv: string): ProfileImportResult {
         header: false,
         skipEmptyLines: false,
         dynamicTyping: false,
+        delimitersToGuess: [",", "\t", ";", " "],
     });
     for (const issue of parsed.errors) {
         errors.push({ row: Math.max(1, (issue.row ?? 0) + 1), message: "CSV 格式錯誤，請檢查引號與欄位分隔符號" });

@@ -106,6 +106,11 @@ export default function UsersManagementPage()  {
         }
     };
 
+    const handleSearchQueryChange = (query: string) => {
+        setCurrentPage(1)
+        setSearchQuery(query)
+    }
+
     const handleToggleSelectAll = () => {
         if (currentPageIds.length === 0) {
             return;
@@ -240,7 +245,7 @@ export default function UsersManagementPage()  {
             <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col border border-outline-variant/40">
                 <UserToolbar
                     searchQuery={searchQuery}
-                    onSearchChange={setSearchQuery}
+                    onSearchChange={handleSearchQueryChange}
                     selectedRole={selectedRole}
                     onRoleChange={setSelectedRole}
                     onDownloadTemplate={handleDownloadTemplate}

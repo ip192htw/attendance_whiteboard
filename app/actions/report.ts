@@ -3,14 +3,14 @@
 
 import { createContainer } from '@/src/container';
 import { requireUser } from '@/src/dal/auth';
-import { ReportItem } from '@/src/domain/attendance';
+import { ReportItem, Report } from '@/src/domain/attendance';
 
 import { AppTime } from '@/shared/time';
 
 
 import { ReportSubmissionError, UnauthorizedError, ForbiddenError } from "@/src/application/errors";
 
-export type ReportResponse =
+export type ReportsResponse =
     | {
         data: ReportItem[];
         error: null;
@@ -20,9 +20,56 @@ export type ReportResponse =
         error: string;
       };
 
+export type ReportResponse =
+    | {
+        data: Report | null;
+        error: null;
+      }
+    | {
+        data: null;
+        error: string;
+      };
+
+
+export async function getLeastReportByClass(
+    classNo: string,
+    now: Date = AppTime.now()
+): Promise<ReportResponse> {
+    try {
+        await requireUser();
+        const container = await createContainer();
+        const data = await container.reportService.getLeastReportByClass(
+            classNo,
+            now
+        );
+        
+        return {
+            data,
+            error: null,
+        };
+        
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            return {
+                data: null,
+                error: "UNAUTHORIZED",
+            };
+        }
+
+        if (error instanceof ForbiddenError) {
+            return {
+                data: null,
+                error: "FORBIDDEN",
+            };
+        }
+
+        throw error;
+    }
+}
+
 export async function getReportsByDate(
     date: Date = AppTime.now()
-): Promise<ReportResponse> {
+): Promise<ReportsResponse> {
     try {
         await requireUser();
         const container = await createContainer();

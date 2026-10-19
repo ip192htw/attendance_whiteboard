@@ -27,6 +27,10 @@ export interface ReportService {
 
     getReportsByDate(date: Date): Promise<ReportItem[]>;
 
+    getLeastReportByClass(classNo: string, now: Date): Promise<Report| null>;
+
+    // getTodayReportsByClass(classNo: string, now: Date): Promise<ReportItem[]>;
+
     getClassHistory(
         query: GetClassHistoryQuery,
     ): Promise<ClassHistoryResult>
@@ -90,6 +94,26 @@ class DefaultReportService
             submitted_by: report.submitted_by,
             submitted_at: report.submitted_at,
         }));
+    }
+
+    async getLeastReportByClass(classNo: string, now: Date): Promise<Report | null> {
+        const reports = await this.repository.getByDateAndClass(
+            now.toLocaleDateString("en-CA"),
+            classNo
+        );
+
+        // 1. 依照 submitted_at 降冪排序（最新最前面）
+        const sortedReports = reports
+            .sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
+
+        const latestReport = sortedReports[0];
+
+        // 若查無資料，回傳 null（或視需求改為 throw Error / 回傳 default 物件）
+        if (!latestReport) {
+            return null;
+        }
+
+        return latestReport
     }
 
     async getClassHistory(

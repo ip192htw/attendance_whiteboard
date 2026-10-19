@@ -1,20 +1,17 @@
 import type { ChangeEventHandler, DragEventHandler, Dispatch, SetStateAction } from "react";
-import type { PreviewStatus } from "../types";
 
 interface ImportFileStepProps {
   selectedFile: File | null;
   isBusy: boolean;
   isDraggingFile: boolean;
-  previewStatus: PreviewStatus;
   setIsDraggingFile: Dispatch<SetStateAction<boolean>>;
   handleFileDrop: DragEventHandler<HTMLDivElement>;
   handleFileChange: ChangeEventHandler<HTMLInputElement>;
-  handlePreview: () => void;
   onDownloadTemplate: () => void;
 }
 
 export function ImportFileStep(props: ImportFileStepProps) {
-  const { selectedFile, isBusy, isDraggingFile, previewStatus, setIsDraggingFile, handleFileDrop, handleFileChange, handlePreview, onDownloadTemplate } = props;
+  const { selectedFile, isBusy, isDraggingFile, setIsDraggingFile, handleFileDrop, handleFileChange, onDownloadTemplate } = props;
 
   return (
     <>

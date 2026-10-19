@@ -3,20 +3,26 @@
 import { RadixMultiSelect } from "./ui";
 import { useState, useActionState, useEffect } from "react";
 
+import { Report } from "@/src/domain/attendance";
+
 
 import { submitReport } from "@/app/actions"
 
 import { AppTime } from "@/shared/time";
 
-export function ReportCard({cooldown_seconds} : { cooldown_seconds: string}) {
+interface ReportCardProps {
+  report: Report | null;
+  cooldown_seconds: string
+}
+export function ReportCard({cooldown_seconds, report} :ReportCardProps) {
 
     const [cooldown, setCooldown] = useState(0);
     const [submittedAt, setSubmittedAt] = useState(new Date("2022-03-25"));
 
-    const [sickLeaveSelected, setSickLeaveSelected] = useState<string[]>([]);
-    const [personalLeaveSelected, setPersonalLeaveSelected] = useState<string[]>([]);
-    const [officialDutySelected, setOfficialDutySelected] = useState<string[]>([]);
-    const [otherLeaveSelected, setOtherLeaveSelected] = useState<string[]>([]);
+    const [sickLeaveSelected, setSickLeaveSelected] = useState<string[]>(report?.payload.sick.map(String) ?? []);
+    const [personalLeaveSelected, setPersonalLeaveSelected] = useState<string[]>(report?.payload.personal.map(String) ?? []);
+    const [officialDutySelected, setOfficialDutySelected] = useState<string[]>(report?.payload.official.map(String) ?? []);
+    const [otherLeaveSelected, setOtherLeaveSelected] = useState<string[]>(report?.payload.other.map(String) ?? []);
     const [state, formAction, isPending] = useActionState(
         async () => {
           setSubmittedAt(AppTime.now())
@@ -42,7 +48,6 @@ export function ReportCard({cooldown_seconds} : { cooldown_seconds: string}) {
             Math.ceil(cooldownSeconds - elapsed),
         );
     }
-
 
     useEffect(() => {
         const update = () => {

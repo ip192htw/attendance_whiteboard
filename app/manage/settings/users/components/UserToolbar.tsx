@@ -3,7 +3,7 @@ import { Role } from "@/src/domain/identity";
 
 interface UserToolbarProps {
   searchQuery: string;
-  onSearchChange: React.Dispatch<React.SetStateAction<string>>;
+  onSearchChange: (arg0: string) => void;
   selectedRole: Role | "all";
   onRoleChange: (role: Role | "all") => void;
   onOpenImportModal: () => void;

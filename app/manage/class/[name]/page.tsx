@@ -4,6 +4,10 @@ import { ClassHistoryTable } from "./component/ClassHistoryTable"
 
 import type { Metadata } from "next";
 
+import { getLeastReportByClass } from "@/app/actions";
+
+import { AppTime } from "@/shared/time";
+
 type Props = {
   params: Promise<{ name: string }>;
 };
@@ -28,6 +32,16 @@ export async function generateMetadata(
 export default async function ClassDetailPage({ params }: Props) {
   const { name } = await params
 
+  const report = await getLeastReportByClass(name)
+
+  const sick = report.data?.payload.sick?.join("、") ?? "無";
+  const personal = report.data?.payload.personal?.join("、") ?? "無";
+  const official = report.data?.payload.official?.join("、") ?? "無";
+  const other = report.data?.payload.other?.join("、") ?? "無";
+
+  const all = report.data?.payload ? Object.values(report.data?.payload)
+    .reduce((acc, arr) => acc + arr.length, 0) : "-"
+
   return (
     <div className="flex flex-col max-w-5xl">
       {/* Breadcrumb & Document Stamp Bar */}
@@ -45,16 +59,16 @@ export default async function ClassDetailPage({ params }: Props) {
       <div className="relative bg-surface-container-lowest rounded-xl p-space-lg shadow-sm overflow-hidden mb-space-lg border border-outline-variant">
         <div className="absolute top-0 left-0 bottom-0 w-2 bg-primary-container" />
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg pl-space-xs">
-          {/* <div className="flex flex-col gap-space-xs">
+          <div className="flex flex-col gap-space-xs">
             <div className="flex items-center gap-space-sm flex-wrap">
               <h1 className="text-lg text-primary tracking-tight font-bold">
                 {name} 班 出缺勤紀錄表
               </h1>
-              <span className="inline-flex items-center gap-1 px-space-sm py-0.5 bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold rounded">
-                今日已回報
+              <span className={`inline-flex items-center gap-1 px-space-sm py-0.5 ${report.error ? "bg-tertiary-fixed" : "bg-error"} text-on-tertiary-fixed font-label-sm text-label-sm font-semibold rounded`}>
+                {report.data ? "今日已回報" : "尚未回報"}
               </span>
             </div>
-            <span className="font-semibold text-on-surface">風紀：{'王小明'}</span>
+            {/* <span className="font-semibold text-on-surface">風紀：{'王小明'}</span> */}
 
 
             <div className="flex flex-wrap items-center gap-space-sm mt-space-xs">
@@ -66,7 +80,7 @@ export default async function ClassDetailPage({ params }: Props) {
                   最後更新：
                 </span>
                 <span className="font-numeric-data text-numeric-data text-on-surface font-semibold">
-                  14:32
+                  {report.data ? AppTime.relative(report.data?.submitted_at) : "-"}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 bg-error-container/60 px-space-sm py-1 rounded text-on-error-container">
@@ -77,11 +91,61 @@ export default async function ClassDetailPage({ params }: Props) {
                   今日缺席人數：
                 </span>
                 <span className="font-numeric-data text-numeric-data font-bold">
-                  5
+                  {all}
                 </span>
               </div>
             </div>
-          </div> */}
+
+            <div className={`flex flex-col gap-space-sm mt-space-xs ${report.data ? "" : "hidden"}`}>
+              <div className="flex items-center gap-1.5 bg-error-container/60 px-space-sm py-1 rounded border-2 border-white hover:border-rose-500/30">
+                <span className="material-symbols-outlined text-[16px] text-rose-600">
+                  sick
+                </span>
+                <span className="font-label-sm text-label-sm text-rose-400">
+                  病假：
+                </span>
+                <span className="font-numeric-data text-numeric-data text-on-surface font-semibold">
+                  {sick}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-error-container/60 px-space-sm py-1 rounded border-2 border-white hover:border-yellow-600/30">
+                <span className="material-symbols-outlined text-[16px] text-yellow-700">
+                  group_off
+                </span>
+                <span className="font-label-sm text-label-sm text-yellow-500">
+                  事假：
+                </span>
+                <span className="font-numeric-data text-numeric-data text-on-surface font-semibold">
+                  {personal}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-error-container/60 px-space-sm py-1 rounded border-2 border-white hover:border-lime-600/30">
+                <span className="material-symbols-outlined text-[16px] text-lime-700">
+                  card_travel
+                </span>
+                <span className="font-label-sm text-label-sm text-lime-500">
+                  公假：
+                </span>
+                <span className="font-numeric-data text-numeric-data text-on-surface font-semibold">
+                  {official}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-error-container/60 px-space-sm py-1 rounded border-2 border-white hover:border-red-400/30">
+                <span className="material-symbols-outlined text-[16px] text-red-700">
+                  other_admission
+                </span>
+                <span className="font-label-sm text-label-sm text-red-500">
+                  曠課/其他：
+                </span>
+                <span className="font-numeric-data text-numeric-data text-on-surface font-semibold">
+                  {other}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+
 
           {/* Action Buttons */}
           {/* <div className="flex items-center gap-space-sm flex-wrap xl:self-start">

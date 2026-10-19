@@ -310,7 +310,7 @@ export const ImportCsvModal = ({
                 aria-modal="true"
                 aria-labelledby="monitor-import-title"
                 aria-describedby="monitor-import-description"
-                className="flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-hidden rounded-none border border-outline-variant/60 bg-surface-container-lowest shadow-xl sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-5xl sm:rounded-xl"
+                className="flex h-dvh max-h-dvh w-full min-h-0 flex-col overflow-hidden rounded-none border border-outline-variant/60 bg-surface-container-lowest shadow-xl sm:h-auto sm:max-h-[calc(100dvh-2rem)] sm:max-w-5xl sm:rounded-xl"
             >
                 <header className="flex shrink-0 items-center justify-between gap-space-sm border-b border-outline-variant/30 px-space-md py-space-sm sm:px-space-lg">
                     <div className="flex min-w-0 items-center gap-space-sm">
@@ -321,7 +321,7 @@ export const ImportCsvModal = ({
                         </span>
                         <h2
                             id="monitor-import-title"
-                            className="min-w-0 break-words font-headline-md text-headline-md font-bold text-primary"
+                            className="min-w-0 warp-break-words font-headline-md text-headline-md font-bold text-primary"
                         >
                             匯入風紀股長名冊
                         </h2>
@@ -361,11 +361,9 @@ export const ImportCsvModal = ({
                                     selectedFile={selectedFile}
                                     isBusy={isBusy}
                                     isDraggingFile={isDraggingFile}
-                                    previewStatus={previewStatus}
                                     setIsDraggingFile={setIsDraggingFile}
                                     handleFileDrop={handleFileDrop}
                                     handleFileChange={handleFileChange}
-                                    handlePreview={handlePreview}
                                     onDownloadTemplate={onDownloadTemplate}
                                 />
                                 <ImportValidationFeedback
@@ -534,7 +532,7 @@ export const ImportCsvModal = ({
                 <footer className="flex shrink-0 flex-col-reverse gap-space-sm border-t border-outline-variant/30 bg-surface-container-lowest px-space-md py-space-sm pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:flex-row sm:items-center sm:justify-between sm:px-space-lg">
                     <div className="min-h-5 min-w-0" aria-live="polite">
                         {closeError && (
-                            <p role="alert" className="break-words font-body-sm text-body-sm text-red-800">
+                            <p role="alert" className="warp-break-words font-body-sm text-body-sm text-red-800">
                                 {closeError}
                             </p>
                         )}
