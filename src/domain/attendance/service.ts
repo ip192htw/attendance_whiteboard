@@ -1,6 +1,7 @@
 import { ReportRepository } from "./repository";
 import { Report, GetClassHistoryQuery, ClassHistoryResult } from "./types";
 import { ValidationError } from "@/src/application/errors";
+import { AppTime } from "@/shared/time";
 
 export interface ReportItem {
     id: string;
@@ -54,7 +55,7 @@ class DefaultReportService
 
     async getReportsByDate(date: Date): Promise<ReportItem[]> {
         const reports = await this.repository.getByDate(
-            date.toLocaleDateString("en-CA")
+            AppTime.date(date)
         );
 
         const reportMap = new Map<string, Report>();

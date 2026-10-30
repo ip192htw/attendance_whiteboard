@@ -129,7 +129,7 @@ export function Metrics({data}: {data: MetricsData}) {
                 公 {data.official}
                 </span>
                 <span className="px-1.5 py-0.5 bg-surface-container rounded text-red-600 font-medium">
-                曠 {data.official}
+                曠 {data.other}
                 </span>
             </div>
             </div>
