@@ -11,6 +11,7 @@ import { ReportItem } from "@/src/domain/attendance";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AppTime } from "@/shared/time";
+import {DatePicker} from "@/app/manage/components/DatePicker";
 
 type Props = {
     params: Promise<{ date: string }>;
@@ -160,10 +161,13 @@ export default async function DashboardPage({ params }: Props) {
 
             <AutoRefresh intervalMs={30000} />
 
-            <div className="flex flex-col">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md w-full">
                 <h1 className="font-display text-4xl text-primary tracking-tight font-bold">
                     {getFormattedDate(today)} 全校回報概況
                 </h1>
+                <div className="w-full md:w-56 shrink-0">
+                    <DatePicker date={date} />
+                </div>
             </div>
 
             {/* Metrics Grid */}
