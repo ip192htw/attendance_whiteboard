@@ -158,7 +158,7 @@ export default async function DashboardPage({ params }: Props) {
     return (
         <div className="flex flex-col gap-space-lg w-full">
 
-            <AutoRefresh intervalMs={30000} />\
+            <AutoRefresh intervalMs={30000} />
 
             <div className="flex flex-col">
                 <h1 className="font-display text-4xl text-primary tracking-tight font-bold">
