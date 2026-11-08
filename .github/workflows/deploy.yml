@@ -1,0 +1,106 @@
+name: Deploy to deployment repository
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # --------------------------------------------------
+      # 1. Checkout 主 Repo
+      # --------------------------------------------------
+      - name: Checkout source repository
+        uses: actions/checkout@v6
+
+      # --------------------------------------------------
+      # 2. 建立乾淨的部署目錄
+      # --------------------------------------------------
+      - name: Prepare deployment files
+        run: |
+          mkdir -p ../deployment
+
+          rsync -av \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='docs/' \
+            --exclude='script/' \
+            --exclude='AGENT.md' \
+            --exclude='CLAUDE.md' \
+            --exclude='README.md' \
+            ./ ../deployment/
+
+      # --------------------------------------------------
+      # 3. Checkout 部署 Repo
+      # --------------------------------------------------
+      - name: Checkout deployment repository
+        uses: actions/checkout@v6
+        with:
+          repository: cnmc-tw/attendance_whiteboard_deploy
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          path: deployment-repo
+
+      # --------------------------------------------------
+      # 4. 清除部署 Repo 舊內容
+      #
+      # 保留 .git，其他全部清掉
+      # --------------------------------------------------
+      - name: Clean deployment repository
+        run: |
+          find deployment-repo \
+            -mindepth 1 \
+            -maxdepth 1 \
+            ! -name '.git' \
+            -exec rm -rf {} +
+
+      # --------------------------------------------------
+      # 5. 複製清理後的程式
+      # --------------------------------------------------
+      - name: Copy deployment files
+        run: |
+          cp -a ../deployment/. deployment-repo/
+
+      # --------------------------------------------------
+      # 6. 顯示最後準備部署的檔案
+      # --------------------------------------------------
+      - name: Show deployment files
+        run: |
+          echo "===== Deployment files ====="
+          find deployment-repo \
+            -type f \
+            ! -path 'deployment-repo/.git/*' \
+            | sort
+
+      # --------------------------------------------------
+      # 7. Commit
+      # --------------------------------------------------
+      - name: Commit deployment changes
+        working-directory: deployment-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          git commit -m "Deploy ${GITHUB_SHA}"
+
+      # --------------------------------------------------
+      # 8. Push 到部署 Repo
+      # --------------------------------------------------
+      - name: Push deployment repository
+        working-directory: deployment-repo
+        run: |
+          git push origin HEAD:main
