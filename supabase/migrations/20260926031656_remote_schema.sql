@@ -803,7 +803,7 @@ REVOKE ALL ON FUNCTION "attendance"."correct_report"(integer, date, jsonb) FROM 
 
 GRANT EXECUTE ON FUNCTION "attendance"."correct_report"(integer, date, jsonb) TO "anon", "authenticated", "postgres", "service_role";
 
-REVOKE ALL ON FUNCTION "attendance"."get_class_history"(text, date, integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "attendance"."get_class_history"(text, date, integer) FROM PUBLIC, anon;
 
 GRANT EXECUTE ON FUNCTION "attendance"."get_class_history"(text, date, integer) TO "authenticated", "postgres";
 
