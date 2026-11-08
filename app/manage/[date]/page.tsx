@@ -1,4 +1,4 @@
-import { Metrics, ClassTable, ClassTableSkeleton, MetricsData } from "../components"
+import { Metrics, MetricsSkeleton, ClassTable, ClassTableSkeleton, MetricsData } from "../components"
 
 import { notFound } from "next/navigation";
 
@@ -24,8 +24,8 @@ export async function generateMetadata(
     const { date } = await params;
 
     // 2. 判斷是否為今天，決定顯示的名稱
-    const decodedName = date === AppTime.date() 
-        ? "本日回報" 
+    const decodedName = date === AppTime.date()
+        ? "本日回報"
         : decodeURIComponent(date);
 
     // 3. 回傳動態設定的 metadata
@@ -167,7 +167,9 @@ export default async function DashboardPage({ params }: Props) {
             </div>
 
             {/* Metrics Grid */}
-            <Metrics data={data} />
+            <Suspense fallback={<MetricsSkeleton />}>
+                <Metrics data={data} />
+            </Suspense>
 
             {/* Class List Table */}
             <Suspense fallback={<ClassTableSkeleton />}>
