@@ -185,7 +185,8 @@ export function ReportCard({ cooldown_seconds, report }: ReportCardProps) {
                                         .padStart(2, "0")}:${(cooldown % 60)
                                             .toString()
                                             .padStart(2, "0")}`
-                                    : "送出今日回報"}
+                                    : !report ? "送出今日回報" 
+                                        : "更新回報"}
                         </span>
                     </button>
                 </div>
