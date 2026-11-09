@@ -16,13 +16,32 @@ jobs:
     steps:
 
       # --------------------------------------------------
-      # 1. Checkout 主 Repo
+      # 1. Checkout source repository
       # --------------------------------------------------
       - name: Checkout source repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       # --------------------------------------------------
-      # 2. 建立乾淨的部署目錄
+      # 2. 取得這次 push 的 commit message
+      # --------------------------------------------------
+      - name: Get commit message
+        id: commit
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/[[:space:]]*$//')
+
+          echo "Commit message:"
+          echo "$COMMIT_MESSAGE"
+
+          {
+            echo "message<<EOF"
+            echo "$COMMIT_MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # --------------------------------------------------
+      # 3. Prepare deployment files
       # --------------------------------------------------
       - name: Prepare deployment files
         run: |
@@ -39,7 +58,7 @@ jobs:
             ./ ../deployment/
 
       # --------------------------------------------------
-      # 3. Checkout 部署 Repo
+      # 4. Checkout deployment repository
       # --------------------------------------------------
       - name: Checkout deployment repository
         uses: actions/checkout@v6
@@ -49,9 +68,7 @@ jobs:
           path: deployment-repo
 
       # --------------------------------------------------
-      # 4. 清除部署 Repo 舊內容
-      #
-      # 保留 .git，其他全部清掉
+      # 5. Clean deployment repository
       # --------------------------------------------------
       - name: Clean deployment repository
         run: |
@@ -62,28 +79,31 @@ jobs:
             -exec rm -rf {} +
 
       # --------------------------------------------------
-      # 5. 複製清理後的程式
+      # 6. Copy deployment files
       # --------------------------------------------------
       - name: Copy deployment files
         run: |
           cp -a ../deployment/. deployment-repo/
 
       # --------------------------------------------------
-      # 6. 顯示最後準備部署的檔案
+      # 7. Show deployment files
       # --------------------------------------------------
       - name: Show deployment files
         run: |
           echo "===== Deployment files ====="
+
           find deployment-repo \
             -type f \
             ! -path 'deployment-repo/.git/*' \
             | sort
 
       # --------------------------------------------------
-      # 7. Commit
+      # 8. Commit deployment repository
       # --------------------------------------------------
       - name: Commit deployment changes
         working-directory: deployment-repo
+        env:
+          COMMIT_MESSAGE: ${{ steps.commit.outputs.message }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -95,10 +115,10 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Deploy ${GITHUB_SHA}"
+          git commit -m "Deploy: ${COMMIT_MESSAGE}"
 
       # --------------------------------------------------
-      # 8. Push 到部署 Repo
+      # 9. Push deployment repository
       # --------------------------------------------------
       - name: Push deployment repository
         working-directory: deployment-repo
