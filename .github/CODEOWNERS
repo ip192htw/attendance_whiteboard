@@ -1,0 +1,17 @@
+# default
+* @ip192htw
+
+# docs
+
+/docs/ @ip192htw
+*.md @ip192htw
+
+# frontend
+/app/ @ip192htw
+
+# backend
+/src/ @ip192htw
+
+# infra
+/shared/ @ip192htw
+/utils/ @ip192htw
