@@ -32,7 +32,7 @@ export async function proxy(request: NextRequest) {
         [
             "connect-src",
             "'self'",
-            "https://vercel.live/",
+            "https://vercel.live",
             "https://*.supabase.co",
             "https://*.upstash.io",
         ].join(" "),
@@ -53,6 +53,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        "/((?!api|auth/callback|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|xml|txt)$).*)",
+        "/((?!api|monitoring|auth/callback|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|xml|txt)$).*)",
     ],
 };

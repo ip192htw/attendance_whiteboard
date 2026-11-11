@@ -15,6 +15,7 @@
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.11",
     "@radix-ui/react-popover": "^1.1.23",
+    "@sentry/nextjs": "^11.12.0",
     "@supabase/ssr": "^0.12.7",
     "@upstash/ratelimit": "^2.2.0",
     "@upstash/redis": "^1.39.0",
@@ -28,7 +29,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.88.0",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^16.3.8",
@@ -42,7 +44,8 @@
     "supabase": "^2.118.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^8.72.2"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
