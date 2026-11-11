@@ -8,9 +8,14 @@ on:
 permissions:
   contents: read
 
+# 避免同一個部署流程同時執行
+concurrency:
+  group: attendance-whiteboard-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    name: Build and Deploy
+    name: Sync to Preview
     runs-on: ubuntu-latest
 
     steps:
@@ -24,15 +29,14 @@ jobs:
           fetch-depth: 0
 
       # --------------------------------------------------
-      # 2. 取得這次 push 的 commit message
+      # 2. Get source commit message
       # --------------------------------------------------
       - name: Get commit message
         id: commit
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/[[:space:]]*$//')
+          COMMIT_MESSAGE=$(git log -1 --pretty=%s)
 
-          echo "Commit message:"
-          echo "$COMMIT_MESSAGE"
+          echo "Commit message: $COMMIT_MESSAGE"
 
           {
             echo "message<<EOF"
@@ -58,14 +62,16 @@ jobs:
             ./ ../deployment/
 
       # --------------------------------------------------
-      # 4. Checkout deployment repository
+      # 4. Checkout deployment repository preview branch
       # --------------------------------------------------
       - name: Checkout deployment repository
         uses: actions/checkout@v6
         with:
           repository: cnmc-tw/attendance_whiteboard_deploy
           token: ${{ secrets.DEPLOY_TOKEN }}
+          ref: preview
           path: deployment-repo
+          fetch-depth: 0
 
       # --------------------------------------------------
       # 5. Clean deployment repository
@@ -98,7 +104,7 @@ jobs:
             | sort
 
       # --------------------------------------------------
-      # 8. Commit deployment repository
+      # 8. Commit deployment changes
       # --------------------------------------------------
       - name: Commit deployment changes
         working-directory: deployment-repo
@@ -118,9 +124,26 @@ jobs:
           git commit -m "Deploy: ${COMMIT_MESSAGE}"
 
       # --------------------------------------------------
-      # 9. Push deployment repository
+      # 9. Sync remote preview branch and push
       # --------------------------------------------------
       - name: Push deployment repository
         working-directory: deployment-repo
         run: |
+          git fetch origin preview
+
+          git rebase origin/preview
+
           git push origin HEAD:preview
+
+      # --------------------------------------------------
+      # 10. Deployment summary
+      # --------------------------------------------------
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "================================"
+          echo "Deployment sync completed"
+          echo "Source: main"
+          echo "Target: preview"
+          echo "Commit: $GITHUB_SHA"
+          echo "================================"
