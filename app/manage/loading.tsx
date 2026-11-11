@@ -1,3 +1,3 @@
 import Dashboard from "./[date]/loading"
 
-export default Dashboard()
+export default async function Page() {return await Dashboard()}
