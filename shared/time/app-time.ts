@@ -53,6 +53,10 @@ function date(value: Date = now()): string {
     return `${year}-${month}-${day}`;
 }
 
+function month(value: Date = now()): number {
+    return Number(getParts(value).month);
+}
+
 function year(value: Date = now()): number {
     return Number(getParts(value).year);
 }
@@ -173,6 +177,7 @@ export const AppTime = {
     date,
     time,
     day,
+    month,
     year,
     formatRepublicDate,
     relative,

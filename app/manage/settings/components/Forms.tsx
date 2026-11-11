@@ -221,7 +221,7 @@ export function SettingForms({config} : {config: SystemConfig}) {
                     
                 </div>
                 <span className="text-red-500 text-xl text-center">
-                    計算公式：起始班號 +  (西元年度 - 基準年) * 年班間隔 = 高三 第一班班號
+                    計算公式：起始班號 +  (西元年度(上學期) - 基準年 - 1) * 年班間隔 = 高三 第一班班號
                 </span>
             </section>
 

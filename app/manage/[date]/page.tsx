@@ -69,8 +69,7 @@ export default async function DashboardPage({ params }: Props) {
 
     const yearBaseClass =
         +config.data.baseClass +
-        (AppTime.year() -
-            +config.data.baseYear - 1) *
+        (AppTime.year() - +config.data.baseYear - (AppTime.month() >= 8 ? 1 : 0)) *
         +config.data.classesPerGrade;
 
     function getGrade(
