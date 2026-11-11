@@ -123,4 +123,4 @@ jobs:
       - name: Push deployment repository
         working-directory: deployment-repo
         run: |
-          git push origin HEAD:main
+          git push origin HEAD:preview
