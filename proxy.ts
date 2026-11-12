@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
             ...(isDev ? ["'unsafe-eval'"] : []),
             "https://accounts.google.com/gsi/client",
             "https://va.vercel-scripts.com",
-            "https://vercel.lives.com",
+            "https://vercel.lives.com"
         ].join(" "),
         [
             "style-src",
