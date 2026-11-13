@@ -1,6 +1,11 @@
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
+import { EventEmitter } from 'events';
+
+// 將 Node.js EventEmitter 的預設上限從 10 提高至 25
+EventEmitter.defaultMaxListeners = 25;
+
 // V8: baseline security headers. Tune the CSP to the exact third parties you
 // load (Google sign-in button styles, Vercel analytics). Start in
 // Report-Only if you need to observe violations before enforcing.
@@ -33,7 +38,7 @@ export default withSentryConfig(nextConfig, {
   project: process.env.SENTRY_PROJECT || "attendance_whiteboard",
 
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: false, // !process.env.CI,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
