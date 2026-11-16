@@ -1,5 +1,5 @@
 // app/daily-report/loading.tsx
-import Card from "./components/ui";
+import Card from "@/app/components/ui";
 
 export default function Loading() {
     return (

@@ -5,7 +5,7 @@ import { safeInternalPath } from "@/lib/safe-redirect";
 
 import { redirect } from "next/navigation";
 
-import Card from "../components/ui"
+import Card from "../../components/ui"
 
 export const metadata = {
     title: "登入 - 學務處學生缺曠回報",

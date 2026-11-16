@@ -2,7 +2,7 @@ import { Metrics, MetricsSkeleton, ClassTable, ClassTableSkeleton, MetricsData }
 
 import { notFound } from "next/navigation";
 
-import { getClassNumberingConfig, getReportsByDate } from "../../actions";
+import { getClassNumberingConfig, getReportsByDate } from "../../../actions";
 
 import { AutoRefresh } from "@/app/components/ui";
 
