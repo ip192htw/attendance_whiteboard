@@ -37,6 +37,7 @@ export function DashboardContent({
     // 以下沿用原本的統計邏輯
     const data: MetricsData = {
         classcount: +config.classesPerGrade * 3,
+        classespergrade: +config.classesPerGrade,
         reportedClass: 0,
 
         notReportedGrade1: [],
