@@ -10,9 +10,13 @@ import { ReportFormSkeleton } from "./components/ReportFormSkeleton"
 import { AppTime } from "@/shared/time";
 
 export default async function DailyReportPage() {
+    const userPromise = requireUser();
+    const configPromise = getReportConfig();
+
     let usr;
+
     try {
-        usr = await requireUser();
+        usr = await userPromise;
     } catch (error) {
         if (error instanceof UnauthorizedError) redirect("/login");
         if (error instanceof ForbiddenError) forbidden();
@@ -22,7 +26,7 @@ export default async function DailyReportPage() {
     if (usr.role !== "monitor") redirect("/manage");
 
     const [config, lastReport] = await Promise.all([
-        getReportConfig(),
+        configPromise,
         getLeastReportByClass(usr.class),
     ]);
 
