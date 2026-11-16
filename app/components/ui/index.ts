@@ -2,7 +2,6 @@ export { RadixMultiSelect } from "./multiselect";
 export { SignOutButton } from "./signoutButton";
 export { GoHomeButton } from "./goHomeButton";
 export { BackButton } from "./backButton"
-export { default } from "./Card";
-export { AutoRefresh} from "./AutoRefresh"
+export { AutoRefresh } from "./AutoRefresh"
 
-export { default as SentryTestButton } from "./SentryTestButton";
+export { SentryTestButton } from "./SentryTestButton";

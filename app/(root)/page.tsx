@@ -4,7 +4,7 @@ import { redirect, forbidden } from "next/navigation";
 import { requireUser } from "@/src/dal/auth";
 import { UnauthorizedError, ForbiddenError } from "@/src/application/errors";
 import { getReportConfig, getLeastReportByClass } from "@/app/actions";
-import Card, { SignOutButton } from "../components/ui";
+import { SignOutButton } from "../components/ui";
 import { ReportForm } from "../components/ReportForm";
 import { ReportFormSkeleton } from "../components/ReportFormSkeleton"
 import { AppTime } from "@/shared/time";
@@ -42,7 +42,7 @@ export default async function DailyReportPage() {
 
 
     return (
-        <Card>
+        <>
             {/* 1. 外頁與標題：秒開直接渲染 */}
             <div className="text-center mb-8">
                 <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
@@ -65,7 +65,7 @@ export default async function DailyReportPage() {
             <div className="flex justify-center mt-6">
                 <SignOutButton />
             </div>
-        </Card>
+        </>
     );
 }
 

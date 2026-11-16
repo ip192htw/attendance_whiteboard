@@ -2,7 +2,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 
-export default function SentryTestButton() {
+export function SentryTestButton() {
     return (
         <button
             type="button"
