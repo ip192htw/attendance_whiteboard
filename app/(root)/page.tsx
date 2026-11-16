@@ -5,8 +5,8 @@ import { requireUser } from "@/src/dal/auth";
 import { UnauthorizedError, ForbiddenError } from "@/src/application/errors";
 import { getReportConfig, getLeastReportByClass } from "@/app/actions";
 import { SignOutButton } from "../components/ui";
-import { ReportForm } from "../components/ReportForm";
-import { ReportFormSkeleton } from "../components/ReportFormSkeleton"
+import { ReportForm } from "./components/ReportForm";
+import { ReportFormSkeleton } from "./components/ReportFormSkeleton"
 import { AppTime } from "@/shared/time";
 
 export default async function DailyReportPage() {

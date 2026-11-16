@@ -1,6 +1,6 @@
 'use client'
 
-import { RadixMultiSelect } from "./ui";
+import { RadixMultiSelect } from "../../components/ui";
 import { useState, useActionState, useOptimistic, useTransition, useEffect } from "react";
 import { Report } from "@/src/domain/attendance";
 import { submitReport } from "@/app/actions";

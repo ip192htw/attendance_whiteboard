@@ -1,3 +1,4 @@
+import { ReportFormSkeleton } from "./components/ReportFormSkeleton"
 
 export default function Loading() {
     return (
@@ -10,8 +11,7 @@ export default function Loading() {
 
             {/* Content Skeleton */}
             <div className="space-y-4 animate-pulse mb-8">
-                <div className="h-12 bg-gray-200 rounded-lg w-full"></div>
-                <div className="h-32 bg-gray-200 rounded-lg w-full"></div>
+                <ReportFormSkeleton />
             </div>
 
             {/* Button Skeleton */}
