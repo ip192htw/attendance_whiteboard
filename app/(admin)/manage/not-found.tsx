@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { BackButton } from "../components/ui"
+import { BackButton } from "../../components/ui"
 
 export default function NotFoundPage() {
   return (
