@@ -24,27 +24,27 @@ export default async function DashboardLayout({
 }>) {
   try {
     await requireInstructor();
-  } catch (error) {
+  } catch(error) {
 
-    if (error instanceof UnauthorizedError) {
-      unauthorized();
-    }
+      if (error instanceof UnauthorizedError) {
+        unauthorized();
+      }
 
-    if (error instanceof ForbiddenError) {
-      forbidden();
-    }
+      if (error instanceof ForbiddenError) {
+        forbidden();
+      }
 
-    throw error;
+      throw error;
   }
-
+  
   return (
-    <div className="min-h-screen bg-surface">
-      <NavWrapper sidebar={<Sidebar />}>
-        <Header />
-        <main className="pl-0 md:pl-72 pt-16 w-full min-h-screen bg-surface">
-          <div className="max-w-310 mx-auto p-4 sm:p-space-md md:p-space-xl">{children}</div>
-        </main>
-      </NavWrapper>
-    </div>
-  );
+      <div className="min-h-screen bg-surface">
+        <NavWrapper sidebar={<Sidebar />}>
+          <Header />
+          <main className="pl-0 md:pl-72 pt-16 w-full min-h-screen bg-surface">
+            <div className="max-w-310 mx-auto p-4 sm:p-space-md md:p-space-xl">{children}</div>
+          </main>
+        </NavWrapper>
+      </div>
+    );
 }
