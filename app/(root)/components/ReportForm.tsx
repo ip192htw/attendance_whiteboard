@@ -1,6 +1,6 @@
 'use client'
 
-import { RadixMultiSelect } from "./ui";
+import { RadixMultiSelect } from "../../components/ui";
 import { useState, useActionState, useOptimistic, useTransition, useEffect } from "react";
 import { Report } from "@/src/domain/attendance";
 import { submitReport } from "@/app/actions";
@@ -11,7 +11,7 @@ interface ReportCardProps {
     cooldown_seconds: string;
 }
 
-export function ReportCard({ cooldown_seconds, report }: ReportCardProps) {
+export function ReportForm({ cooldown_seconds, report }: ReportCardProps) {
     const [isPendingTransition, startTransition] = useTransition();
 
     // 1. 真實狀態 (Server 的冷卻計算基準時間)
