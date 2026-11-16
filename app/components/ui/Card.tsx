@@ -1,6 +1,5 @@
-import { FallingLeaves } from "@/app/components/ui/animation";
-
-export default async function Layout({
+import { FallingLeaves } from "./animation";
+export default async function Card({
     children,
 }: Readonly<{
     children: React.ReactNode;
