@@ -7,20 +7,23 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  environment: process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT || process.env.NODE_ENV,
+  environment:
+    process.env.NEXT_PUBLIC_VERCEL_ENV ??
+    process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT ??
+    process.env.NODE_ENV,
 
-  release: process.env.NEXT_PUBLIC_SENTRY_RELEASE ?? "attendance_whiteboard@local",
+  release: `attendance_whiteboard@${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "local"}`,
 
   // Add optional integrations for additional features
   integrations: [Sentry.replayIntegration()],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.1,
 
   // Define how likely Replay events are sampled.
   // This sets the sample rate to be 10%. You may want this to be 100% while
   // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
+  replaysSessionSampleRate: 0.05,
 
   // Define how likely Replay events are sampled when an error occurs.
   replaysOnErrorSampleRate: 1.0,
