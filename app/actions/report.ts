@@ -14,57 +14,39 @@ export type ReportsResponse =
     | {
         data: ReportItem[];
         error: null;
-      }
+    }
     | {
         data: null;
         error: string;
-      };
+    };
 
 export type ReportResponse =
     | {
         data: Report | null;
         error: null;
-      }
+    }
     | {
         data: null;
         error: string;
-      };
+    };
 
 
 export async function getLeastReportByClass(
     classNo: string,
     now: Date = AppTime.now()
 ): Promise<ReportResponse> {
-    try {
-        await requireUser();
-        const container = await createContainer();
-        const data = await container.reportService.getLeastReportByClass(
-            classNo,
-            now
-        );
-        
-        return {
-            data,
-            error: null,
-        };
-        
-    } catch (error) {
-        if (error instanceof UnauthorizedError) {
-            return {
-                data: null,
-                error: "UNAUTHORIZED",
-            };
-        }
 
-        if (error instanceof ForbiddenError) {
-            return {
-                data: null,
-                error: "FORBIDDEN",
-            };
-        }
+    const container = await createContainer();
+    const data = await container.reportService.getLeastReportByClass(
+        classNo,
+        now
+    );
 
-        throw error;
-    }
+    return {
+        data,
+        error: null,
+    };
+
 }
 
 export async function getReportsByDate(
@@ -103,11 +85,11 @@ export async function getReportsByDate(
 export type SubmitReportState =
     | {
         success: true;
-      }
+    }
     | {
         success: false;
         error?: string;
-      };
+    };
 
 
 export async function submitReport(
@@ -148,7 +130,7 @@ export async function submitReport(
         }
 
         // V15: do not log full error objects (may contain PII / payload).
-        console.error("submitReport failed:", error instanceof Error ? error.name : "unknown");
+        // console.error("submitReport failed:", error instanceof Error ? error.name : "unknown");
 
         return {
             success: false,

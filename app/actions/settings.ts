@@ -12,93 +12,54 @@ export type ConfigResponse<T> =
     | {
         data: T;
         error: null;
-      }
+    }
     | {
         data: null;
         error: string;
-      };
+    };
 
 export async function getReportConfig(): Promise<ConfigResponse<ReportConfig>> {
-    try {
-        await requireUser();
 
-        const container = await createContainer();
+    const container = await createContainer();
 
-        const config = await container.settingsService.getReportConfig();
+    const config = await container.settingsService.getReportConfig();
 
-        if (!config) {
-            return {
-                data: null,
-                error: "CONFIG_NOT_FOUND",
-            };
-        }
-
+    if (!config) {
         return {
-            data: config,
-            error: null,
+            data: null,
+            error: "CONFIG_NOT_FOUND",
         };
-    } catch (error) {
-        if (error instanceof UnauthorizedError) {
-            return {
-                data: null,
-                error: "UNAUTHORIZED",
-            };
-        }
-
-        if (error instanceof ForbiddenError) {
-            return {
-                data: null,
-                error: "FORBIDDEN",
-            };
-        }
-
-        throw error;
     }
+
+    return {
+        data: config,
+        error: null,
+    };
+
 }
 
 
 export async function getClassNumberingConfig(): Promise<ConfigResponse<ClassNumberingConfig>> {
-    try {
-        await requireUser();
 
-        const container = await createContainer();
+    const container = await createContainer();
 
-        const config = await container.settingsService.getClassNumberingConfig();
+    const config = await container.settingsService.getClassNumberingConfig();
 
-        if (!config) {
-            return {
-                data: null,
-                error: "CONFIG_NOT_FOUND",
-            };
-        }
-
+    if (!config) {
         return {
-            data: config,
-            error: null,
+            data: null,
+            error: "CONFIG_NOT_FOUND",
         };
-    } catch (error) {
-        if (error instanceof UnauthorizedError) {
-            return {
-                data: null,
-                error: "UNAUTHORIZED",
-            };
-        }
-
-        if (error instanceof ForbiddenError) {
-            return {
-                data: null,
-                error: "FORBIDDEN",
-            };
-        }
-
-        throw error;
     }
+
+    return {
+        data: config,
+        error: null,
+    };
+
 }
 
 export async function getSettings() {
-    // V7: previously unauthenticated. Require a valid app user; RLS remains the
-    // final gate, but do not rely on it alone.
-    await requireUser();
     const container = await createContainer();
     return container.settingsService.getSettings();
 }
@@ -106,11 +67,11 @@ export async function getSettings() {
 export type UpdateSettingsState =
     | {
         success: true;
-      }
+    }
     | {
         success: false;
         error?: string;
-      };
+    };
 
 export async function setSettings(setting: SystemConfig): Promise<UpdateSettingsState> {
 

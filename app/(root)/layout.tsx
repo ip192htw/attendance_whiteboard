@@ -7,7 +7,7 @@ export default async function Layout({
 }>) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-surface font-body-md text-on-surface antialiased">
-            <FallingLeaves count={20} />
+            {/* <FallingLeaves count={20} /> */}
             <main className="w-full">
                 <div className="flex flex-col w-full items-center justify-center p-gutter md:p-gutter-desktop relative overflow-hidden">
                     {/* Decorative background geometry */}
