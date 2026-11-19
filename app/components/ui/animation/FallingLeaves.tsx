@@ -24,7 +24,7 @@ interface Leaf {
     leafType: string;   // 葉子圖案
 }
 
-const LEAF_TYPES = ['🍁', '🍂', '🍃'];
+const LEAF_TYPES = ['❅', '❆', '✦', '✧', '•'];
 
 export function FallingLeaves({ count = 15 }: { count?: number }) {
     const leaves = useMemo<Leaf[]>(() => {
@@ -36,7 +36,7 @@ export function FallingLeaves({ count = 15 }: { count?: number }) {
                 id: i,
                 x: seededRandom(baseSeed + 1, 0, 100),
                 size: seededRandom(baseSeed + 2, 1.2, 2.5),
-                duration: seededRandom(baseSeed + 3, 12, 24),
+                duration: seededRandom(baseSeed + 3, 9, 12),
                 delay: seededRandom(baseSeed + 4, 0, 3),
                 rotate: seededRandom(baseSeed + 5, 0, 360),
                 leafType: LEAF_TYPES[typeIndex],
@@ -54,6 +54,8 @@ export function FallingLeaves({ count = 15 }: { count?: number }) {
                         left: `${leaf.x}vw`,
                         top: '-50px',
                         fontSize: `${leaf.size}rem`,
+                        color: 'rgba(186, 230, 253, 0.9)',
+                        textShadow: '0 0 8px rgba(56, 189, 248, 0.5)',
                     }}
                     initial={{
                         y: -50,

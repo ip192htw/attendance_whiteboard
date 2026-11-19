@@ -7,19 +7,9 @@ export default async function Layout({
 }>) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-surface font-body-md text-on-surface antialiased">
-            {/* <FallingLeaves count={20} /> */}
+            <FallingLeaves />
             <main className="w-full">
                 <div className="flex flex-col w-full items-center justify-center p-gutter md:p-gutter-desktop relative overflow-hidden">
-                    {/* Decorative background geometry */}
-                    <div
-                        aria-hidden="true"
-                        className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-surface-container-high/40 blur-3xl pointer-events-none"
-                    />
-                    <div
-                        aria-hidden="true"
-                        className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary-container/30 blur-3xl pointer-events-none"
-                    />
-
                     {/* Primary Authentication Container */}
                     <div className="relative w-full max-w-120 bg-surface-container-lowest shadow-xl rounded-xl p-6 sm:p-10 transition-all duration-300">
 
