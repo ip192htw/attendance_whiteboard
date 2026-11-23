@@ -15,7 +15,13 @@ Sentry.init({
   release: `attendance_whiteboard@${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "local"}`,
 
   // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  integrations: [
+    Sentry.replayIntegration(),
+    Sentry.browserTracingIntegration({
+      shouldCreateSpanForRequest: (url) =>
+        !url.startsWith(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest`),
+    }),
+  ],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 0.1,

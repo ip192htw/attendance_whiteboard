@@ -15,6 +15,13 @@ Sentry.init({
       process.env.VERCEL_GIT_COMMIT_SHA ?? "local"
     }`,
 
+  integrations: [
+    Sentry.nativeNodeFetchIntegration({
+      ignoreOutgoingRequests: (url) =>
+        url.startsWith(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest`),
+    }),
+  ],
+
   tracesSampleRate: 1,
 
   dataCollection: {

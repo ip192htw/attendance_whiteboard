@@ -15,6 +15,14 @@ Sentry.init({
       process.env.VERCEL_GIT_COMMIT_SHA ?? "local"
     }`,
 
+  integrations: [
+    Sentry.winterCGFetchIntegration({
+      breadcrumbs: true,
+      shouldCreateSpanForRequest: (url) =>
+        !url.startsWith(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest`),
+    }),
+  ],
+
   tracesSampleRate: 1,
 
   dataCollection: {
