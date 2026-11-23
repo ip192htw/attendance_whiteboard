@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -6,7 +7,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const createClient = async () => {
   const cookieStore = await cookies();
-  return createServerClient(
+  const client =  createServerClient(
     supabaseUrl!,
     supabaseKey!,
     {
@@ -26,4 +27,7 @@ export const createClient = async () => {
       },
     },
   );
+
+  Sentry.instrumentSupabaseClient(client);
+  return client;
 };
