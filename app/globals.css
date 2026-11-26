@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
---color-surface: #f6f9fe;
+  --color-surface: #f6f9fe;
   --color-surface-dim: #d5dce5;
   --color-surface-bright: #f6f9fe;
   --color-surface-container-lowest: #ffffff;
@@ -77,12 +77,15 @@
 }
 
 @layer base {
-  html, body {
+
+  html,
+  body {
     margin: 0;
     padding: 0;
     background-color: var(--color-surface);
     color: var(--color-on-surface);
   }
+
   body {
     overscroll-behavior: none;
   }
@@ -125,7 +128,7 @@
     border: 2px solid black;
   }
 
-  
+
 
   .gsi-material-button .gsi-material-button-icon {
     height: 20px;
@@ -183,7 +186,7 @@
     opacity: 38%;
   }
 
-  .gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+  .gsi-material-button:not(:disabled):active .gsi-material-button-state,
   .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
     background-color: #303030;
     opacity: 12%;

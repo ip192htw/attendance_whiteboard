@@ -16,6 +16,7 @@ Sentry.init({
     }`,
 
   integrations: [
+    Sentry.serveTunnelIntegration(),
     Sentry.nativeNodeFetchIntegration({
       ignoreOutgoingRequests: (url) =>
         url.startsWith(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest`),
