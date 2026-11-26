@@ -5,7 +5,8 @@ import {
     Metrics,
     ClassTable,
     type MetricsData,
-} from "../components";
+    DatePicker
+} from ".";
 
 import { useReportsByDate } from "@/hooks/use-reports-by-date";
 
@@ -140,10 +141,14 @@ export function DashboardContent({
 
     return (
         <div className="flex flex-col gap-space-lg w-full">
-            <div className="flex flex-col">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-space-md w-full">
                 <h1 className="font-display text-4xl text-primary tracking-tight font-bold">
                     {getFormattedDate(today)} 全校回報概況
                 </h1>
+
+                <div className="w-full md:w-56 shrink-0">
+                    <DatePicker date={date} />
+                </div>
             </div>
 
             <Metrics data={data} />

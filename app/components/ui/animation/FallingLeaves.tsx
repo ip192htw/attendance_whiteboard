@@ -54,8 +54,8 @@ export function FallingLeaves({ count = 15 }: { count?: number }) {
                         left: `${leaf.x}vw`,
                         top: '-50px',
                         fontSize: `${leaf.size}rem`,
-                        color: 'rgba(186, 230, 253, 0.9)',
-                        textShadow: '0 0 8px rgba(56, 189, 248, 0.5)',
+                        color: 'var(--color-primary-fixed-dim)',
+                        textShadow: '0 0 8px var(--color-outline-variant)',
                     }}
                     initial={{
                         y: -50,

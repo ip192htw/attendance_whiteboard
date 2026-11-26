@@ -47,7 +47,7 @@ export default async function DailyReportPage() {
 
     return (
         <>
-            {/* 1. 外頁與標題：秒開直接渲染 */}
+            {/* 1. 外頁與標題 */}
             <div className="text-center mb-8">
                 <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
                     學務處學生缺曠回報
@@ -57,7 +57,7 @@ export default async function DailyReportPage() {
                 </p>
             </div>
 
-            {/* 2. 資料密集區塊：使用 Suspense 達成獨立 Streaming */}
+            {/* 2. 資料密集區塊*/}
             <Suspense fallback={<ReportFormSkeleton />}>
                 <ReportForm
                     cooldown_seconds={config.data.report_cooldown_seconds}
@@ -65,7 +65,7 @@ export default async function DailyReportPage() {
                 />
             </Suspense>
 
-            {/* 3. 靜態操作按鈕：秒開直接渲染 */}
+            {/* 3. 靜態操作按鈕*/}
             <div className="flex justify-center mt-6">
                 <SignOutButton />
             </div>
@@ -75,8 +75,23 @@ export default async function DailyReportPage() {
 
 function ErrorMessage({ message }: { message: string }) {
     return (
-        <h1 className="text-2xl text-center text-on-surface mb-space-sm tracking-tight font-bold">
-            {message}
-        </h1>
+        <>
+            {/* 1. 外頁與標題*/}
+            <div className="text-center mb-8">
+                <h1 className="font-headline-lg text-3xl font-extrabold text-primary-container mb-2">
+                    學務處學生缺曠回報
+                </h1>
+            </div>
+
+            {/* 2. 錯誤訊息區塊 */}
+            <h1 className="text-2xl text-center text-on-surface mb-space-sm tracking-tight font-bold">
+                {message}
+            </h1>
+
+            {/* 3. 靜態操作按鈕 */}
+            <div className="flex justify-center mt-6">
+                <SignOutButton />
+            </div>
+        </>
     );
 }
